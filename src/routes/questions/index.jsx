@@ -20,7 +20,7 @@ function Questions() {
     if (foundAnswer) {
       setSelectedAnswer(foundAnswer.answer);
     }
-  }, [questionNumber]);
+  }, [list_answer, questionNumber]);
 
   const handleSelectAnswer = (answer, questionID) => {
     setSelectedAnswer(answer);
