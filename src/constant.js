@@ -7,4 +7,6 @@ export const APP_PATHS = {
 export const APP_SESSION_STORAGE = {
   USER_ANSWERS: "user_answers",
   QUIZ_SCORE: "quiz_score",
+  QUIZ_TIME: "quiz_time",
+  TIMER: "timer",
 };
