@@ -2,21 +2,24 @@ import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Icon, Button } from "semantic-ui-react";
 import { Container, Warning } from "./_finishStyle";
+import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
+
+const { QUESTIONS_PATH } = APP_PATHS;
+const { QUIZ_SCORE } = APP_SESSION_STORAGE;
 
 function Finish() {
   const history = useHistory();
 
-  const quizScore = sessionStorage.getItem("quiz_score");
+  const quizScore = sessionStorage.getItem(QUIZ_SCORE);
 
   useEffect(() => {
     return () => {
-      sessionStorage.removeItem("quiz_score");
+      sessionStorage.removeItem(QUIZ_SCORE);
     };
   });
 
   const handleCobaLagiClick = () => {
-    sessionStorage.removeItem("quiz_score");
-    history.replace("/questions");
+    history.replace(QUESTIONS_PATH);
   };
 
   return (
