@@ -1,21 +1,57 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "semantic-ui-react";
 import Question from "../../components/question/index.jsx";
-import { Container, Navigation } from "./_questionsStyle";
+import { Container, Time, Navigation } from "./_questionsStyle";
 import { questions, answers } from "./data";
 import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
 
 const { FINISH_PATH } = APP_PATHS;
-const { USER_ANSWERS, QUIZ_SCORE } = APP_SESSION_STORAGE;
+const { USER_ANSWERS, QUIZ_SCORE, QUIZ_TIME, TIMER } = APP_SESSION_STORAGE;
 
 function Questions() {
+  const _timer = sessionStorage.getItem(TIMER) || questions.length * 30 * 1000;
   const [questionNumber, setQuestionNumber] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState("");
+  const [time, setTime] = useState(_timer);
   const history = useHistory();
 
   let list_answer = sessionStorage.getItem(USER_ANSWERS);
   list_answer = list_answer ? JSON.parse(list_answer) : [];
+
+  const submitAnswers = useCallback(() => {
+    let _quizTime =
+      time === 0
+        ? formatTime(questions.length * 30 * 1000)
+        : formatTime(questions.length * 30 * 1000 - time);
+    let quizScore = 0;
+    list_answer.forEach((ans) => {
+      const correctAnswer = answers.find(
+        (correctAns) => correctAns.id === ans.id
+      );
+      if (ans.answer === correctAnswer.answer) {
+        quizScore = quizScore + (1 / questions.length) * 100;
+      }
+    });
+    sessionStorage.setItem(QUIZ_SCORE, quizScore);
+    sessionStorage.setItem(QUIZ_TIME, _quizTime);
+    sessionStorage.removeItem(USER_ANSWERS);
+    sessionStorage.removeItem(TIMER);
+    history.replace(FINISH_PATH);
+  }, [time, list_answer, history]);
+
+  useEffect(() => {
+    if (time === 0) {
+      submitAnswers();
+      return;
+    }
+    const timeout = setTimeout(() => {
+      sessionStorage.setItem(TIMER, time);
+      setTime((prevState) => prevState - 1000);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [time, submitAnswers]);
 
   useEffect(() => {
     const foundAnswer = list_answer.find(
@@ -54,23 +90,29 @@ function Questions() {
       setQuestionNumber((prevState) => prevState + 1);
       setSelectedAnswer("");
     } else {
-      let quizScore = 0;
-      list_answer.forEach((ans) => {
-        const correctAnswer = answers.find(
-          (correctAns) => correctAns.id === ans.id
-        );
-        if (ans.answer === correctAnswer.answer) {
-          quizScore = quizScore + (1 / questions.length) * 100;
-        }
-      });
-      sessionStorage.setItem(QUIZ_SCORE, quizScore);
-      sessionStorage.removeItem(USER_ANSWERS);
-      history.replace(FINISH_PATH);
+      submitAnswers();
     }
+  };
+
+  const formatTime = (time) => {
+    let timeText = "";
+    let seconds = time / 1000;
+    let minutes = 0;
+    if (seconds >= 60) {
+      minutes = Math.floor(seconds / 60);
+      seconds = seconds % 60;
+      timeText = `${minutes} menit ${seconds} detik`;
+      return timeText;
+    }
+    timeText = `${seconds} detik`;
+    return timeText;
   };
 
   return (
     <Container>
+      <Time>
+        Sisa waktu: <span>{formatTime(time)}</span>
+      </Time>
       <Question
         {...questions[questionNumber]}
         selectedAnswer={selectedAnswer}

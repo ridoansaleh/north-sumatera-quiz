@@ -17,6 +17,22 @@ export const Container = styled.div`
   }
 `;
 
+export const Time = styled.div`
+  border: 2.5px solid #fc806f;
+  padding: 10px;
+  margin-bottom: 24px;
+  text-align: center;
+
+  span {
+    font-weight: bold;
+  }
+
+  @media only screen and (min-width: 768px) {
+    width: 320px;
+    margin: 0 auto 48px;
+  }
+`;
+
 export const Navigation = styled.div`
   display: flex;
   flex-direction: column-reverse;

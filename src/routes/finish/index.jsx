@@ -5,15 +5,17 @@ import { Container, Warning } from "./_finishStyle";
 import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
 
 const { QUESTIONS_PATH } = APP_PATHS;
-const { QUIZ_SCORE } = APP_SESSION_STORAGE;
+const { QUIZ_SCORE, QUIZ_TIME, TIMER } = APP_SESSION_STORAGE;
 
 function Finish() {
   const history = useHistory();
 
   const quizScore = sessionStorage.getItem(QUIZ_SCORE);
+  const quizTime = sessionStorage.getItem(QUIZ_TIME);
 
   useEffect(() => {
     return () => {
+      sessionStorage.removeItem(TIMER);
       sessionStorage.removeItem(QUIZ_SCORE);
     };
   });
@@ -32,6 +34,7 @@ function Finish() {
       )}
       <h3>Kamu telah menyelesaikan Quiz Seputar Sumatera Utara</h3>
       <h3>Nilai: {quizScore}</h3>
+      <h3>Waktu: {quizTime}</h3>
       {quizScore < 70 && (
         <Warning>
           <h4>Kelihatannya nilai kamu tidak cukup bagus</h4>
