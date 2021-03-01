@@ -2,12 +2,15 @@ import { useHistory } from "react-router-dom";
 import { Image, Button } from "semantic-ui-react";
 import { Container } from "./_homeStyle";
 import questionsIllustration from "./undraw_Questions_re_1fy7.svg";
+import { APP_PATHS } from "../../constant";
+
+const { QUESTIONS_PATH } = APP_PATHS;
 
 function Home() {
   const history = useHistory();
 
   const handleStartClick = () => {
-    history.replace("/questions");
+    history.replace(QUESTIONS_PATH);
   };
 
   return (

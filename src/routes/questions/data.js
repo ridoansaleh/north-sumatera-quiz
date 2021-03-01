@@ -1,4 +1,4 @@
-import image_01 from "./images/Kantor-Gubernur-Sumut.jpg";
+import image_01 from "./images/kantor-gubernur-sumut.jpg";
 import image_02 from "./images/kantor-bupati-nias.jpg";
 import image_03 from "./images/tor-sibohi.jpg";
 import image_04 from "./images/makam-papan-tinggi.jpg";

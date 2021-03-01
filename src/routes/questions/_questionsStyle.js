@@ -4,7 +4,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
   padding: 24px;
 
   > button {
@@ -19,11 +19,11 @@ export const Container = styled.div`
 
 export const Navigation = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   margin-top: 24px;
 
   .kembali-btn {
-    margin-bottom: 10px !important;
+    margin-top: 10px !important;
   }
 
   @media only screen and (min-width: 768px) {
@@ -32,7 +32,7 @@ export const Navigation = styled.div`
 
     .kembali-btn {
       margin-right: 10px !important;
-      margin-bottom: 0 !important;
+      margin-top: 0 !important;
     }
 
     > button {

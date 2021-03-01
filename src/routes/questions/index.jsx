@@ -4,13 +4,17 @@ import { Button } from "semantic-ui-react";
 import Question from "../../components/question/index.jsx";
 import { Container, Navigation } from "./_questionsStyle";
 import { questions, answers } from "./data";
+import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
+
+const { FINISH_PATH } = APP_PATHS;
+const { USER_ANSWERS, QUIZ_SCORE } = APP_SESSION_STORAGE;
 
 function Questions() {
   const [questionNumber, setQuestionNumber] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const history = useHistory();
 
-  let list_answer = sessionStorage.getItem("user_answers");
+  let list_answer = sessionStorage.getItem(USER_ANSWERS);
   list_answer = list_answer ? JSON.parse(list_answer) : [];
 
   useEffect(() => {
@@ -38,7 +42,7 @@ function Questions() {
       }
       return ans;
     });
-    sessionStorage.setItem("user_answers", JSON.stringify(updated_list_answer));
+    sessionStorage.setItem(USER_ANSWERS, JSON.stringify(updated_list_answer));
   };
 
   const handleKembaliClick = () => {
@@ -59,9 +63,9 @@ function Questions() {
           quizScore = quizScore + (1 / questions.length) * 100;
         }
       });
-      sessionStorage.setItem("quiz_score", quizScore);
-      sessionStorage.removeItem("user_answers");
-      history.replace("/finish");
+      sessionStorage.setItem(QUIZ_SCORE, quizScore);
+      sessionStorage.removeItem(USER_ANSWERS);
+      history.replace(FINISH_PATH);
     }
   };
 
