@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/3d15d981-37de-4756-9b09-5832d2ab358c/deploy-status)](https://app.netlify.com/sites/peaceful-murdock-945530/deploys)
+
 # North Sumatera Quiz
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

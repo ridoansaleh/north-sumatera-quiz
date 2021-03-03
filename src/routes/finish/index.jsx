@@ -2,7 +2,11 @@ import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Icon, Button } from "semantic-ui-react";
 import { Container, Warning } from "./_finishStyle";
-import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
+import {
+  APP_PATHS,
+  APP_SESSION_STORAGE,
+  MIN_PASS_QUIZ_SCORE,
+} from "../../constant";
 
 const { QUESTIONS_PATH } = APP_PATHS;
 const { QUIZ_SCORE, QUIZ_TIME, TIMER } = APP_SESSION_STORAGE;
@@ -26,8 +30,8 @@ function Finish() {
 
   return (
     <Container>
-      <h1>{quizScore >= 70 ? "Horee!" : "Waduuh"}</h1>
-      {quizScore >= 70 ? (
+      <h1>{quizScore >= MIN_PASS_QUIZ_SCORE ? "Horee!" : "Waduuh"}</h1>
+      {quizScore >= MIN_PASS_QUIZ_SCORE ? (
         <Icon name="check circle" size="massive" color="green" />
       ) : (
         <Icon name="x" size="massive" color="red" />
@@ -35,7 +39,7 @@ function Finish() {
       <h3>Kamu telah menyelesaikan Quiz Seputar Sumatera Utara</h3>
       <h3>Nilai: {quizScore}</h3>
       <h3>Waktu: {quizTime}</h3>
-      {quizScore < 70 && (
+      {quizScore < MIN_PASS_QUIZ_SCORE && (
         <Warning>
           <h4>Kelihatannya nilai kamu tidak cukup bagus</h4>
           <Button primary onClick={handleCobaLagiClick} content="Coba Lagi" />
