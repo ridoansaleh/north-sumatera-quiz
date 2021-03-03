@@ -8,24 +8,23 @@ import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
 
 const { FINISH_PATH } = APP_PATHS;
 const { USER_ANSWERS, QUIZ_SCORE, QUIZ_TIME, TIMER } = APP_SESSION_STORAGE;
+const MAX_QUIZ_TIME = questions.length * 30 * 1000;
 
 function Questions() {
-  const _timer = sessionStorage.getItem(TIMER) || questions.length * 30 * 1000;
+  const _timer = sessionStorage.getItem(TIMER) || MAX_QUIZ_TIME;
   const [questionNumber, setQuestionNumber] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [time, setTime] = useState(_timer);
   const history = useHistory();
 
-  let list_answer = sessionStorage.getItem(USER_ANSWERS);
-  list_answer = list_answer ? JSON.parse(list_answer) : [];
+  let user_answer = sessionStorage.getItem(USER_ANSWERS);
+  user_answer = user_answer ? JSON.parse(user_answer) : [];
 
   const submitAnswers = useCallback(() => {
     let _quizTime =
-      time === 0
-        ? formatTime(questions.length * 30 * 1000)
-        : formatTime(questions.length * 30 * 1000 - time);
+      time === 0 ? formatTime(MAX_QUIZ_TIME) : formatTime(MAX_QUIZ_TIME - time);
     let quizScore = 0;
-    list_answer.forEach((ans) => {
+    user_answer.forEach((ans) => {
       const correctAnswer = answers.find(
         (correctAns) => correctAns.id === ans.id
       );
@@ -38,7 +37,7 @@ function Questions() {
     sessionStorage.removeItem(USER_ANSWERS);
     sessionStorage.removeItem(TIMER);
     history.replace(FINISH_PATH);
-  }, [time, list_answer, history]);
+  }, [time, user_answer, history]);
 
   useEffect(() => {
     if (time === 0) {
@@ -54,13 +53,13 @@ function Questions() {
   }, [time, submitAnswers]);
 
   useEffect(() => {
-    const foundAnswer = list_answer.find(
+    const foundAnswer = user_answer.find(
       (ans) => ans.id === questionNumber + 1
     );
     if (foundAnswer) {
       setSelectedAnswer(foundAnswer.answer);
     }
-  }, [list_answer, questionNumber]);
+  }, [user_answer, questionNumber]);
 
   const handleSelectAnswer = (answer, questionID) => {
     setSelectedAnswer(answer);
@@ -68,17 +67,17 @@ function Questions() {
       id: questionID,
       answer,
     };
-    const existAnswer = list_answer.find((ans) => ans.id === questionID);
+    const existAnswer = user_answer.find((ans) => ans.id === questionID);
     if (!existAnswer) {
-      list_answer.push(answer_detail);
+      user_answer.push(answer_detail);
     }
-    const updated_list_answer = list_answer.map((ans) => {
+    const updated_user_answer = user_answer.map((ans) => {
       if (ans.id === questionID) {
         return answer_detail;
       }
       return ans;
     });
-    sessionStorage.setItem(USER_ANSWERS, JSON.stringify(updated_list_answer));
+    sessionStorage.setItem(USER_ANSWERS, JSON.stringify(updated_user_answer));
   };
 
   const handleKembaliClick = () => {

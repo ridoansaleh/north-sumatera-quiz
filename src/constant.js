@@ -10,3 +10,5 @@ export const APP_SESSION_STORAGE = {
   QUIZ_TIME: "quiz_time",
   TIMER: "timer",
 };
+
+export const MIN_PASS_QUIZ_SCORE = 70;
