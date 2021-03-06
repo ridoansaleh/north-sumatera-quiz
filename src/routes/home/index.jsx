@@ -10,6 +10,7 @@ function Home() {
   const history = useHistory();
 
   const handleStartClick = () => {
+    window.FB.AppEvents.logEvent("Ayo Mulai button clicked");
     history.replace(QUESTIONS_PATH);
   };
 

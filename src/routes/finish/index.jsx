@@ -25,6 +25,7 @@ function Finish() {
   });
 
   const handleCobaLagiClick = () => {
+    window.FB.AppEvents.logEvent("Coba Lagi button clicked");
     history.replace(QUESTIONS_PATH);
   };
 
