@@ -36,7 +36,7 @@ function Finish() {
       ) : (
         <Icon name="x" size="massive" color="red" />
       )}
-      <h3>Kamu telah menyelesaikan Quiz Seputar Sumatera Utara</h3>
+      <h3>Kamu telah menyelesaikan Kuis Seputar Sumatera Utara</h3>
       <h3>Nilai: {quizScore}</h3>
       <h3>Waktu: {quizTime}</h3>
       {quizScore < MIN_PASS_QUIZ_SCORE && (
