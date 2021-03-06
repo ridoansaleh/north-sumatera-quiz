@@ -1,6 +1,6 @@
 {
-  "short_name": "NS Quiz",
-  "name": "North Sumatera Quiz",
+  "short_name": "Kuis Sumut",
+  "name": "Kuis Sumut",
   "icons": [
     {
       "src": "favicon.png",
@@ -10,7 +10,7 @@
     {
       "src": "logo192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "124x124"
     },
     {
       "src": "logo512.png",
