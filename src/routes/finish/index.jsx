@@ -9,18 +9,18 @@ import {
 } from "../../constant";
 
 const { QUESTIONS_PATH } = APP_PATHS;
-const { QUIZ_SCORE, QUIZ_TIME, TIMER } = APP_SESSION_STORAGE;
+const { USER_QUIZ_SCORE, USER_QUIZ_TIME, TIMER } = APP_SESSION_STORAGE;
 
 function Finish() {
   const history = useHistory();
 
-  const quizScore = sessionStorage.getItem(QUIZ_SCORE);
-  const quizTime = sessionStorage.getItem(QUIZ_TIME);
+  const quizScore = sessionStorage.getItem(USER_QUIZ_SCORE);
+  const quizTime = sessionStorage.getItem(USER_QUIZ_TIME);
 
   useEffect(() => {
     return () => {
       sessionStorage.removeItem(TIMER);
-      sessionStorage.removeItem(QUIZ_SCORE);
+      sessionStorage.removeItem(USER_QUIZ_SCORE);
     };
   });
 
