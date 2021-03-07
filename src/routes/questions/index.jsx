@@ -7,11 +7,19 @@ import { questions, answers } from "./data";
 import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
 
 const { FINISH_PATH } = APP_PATHS;
-const { USER_ANSWERS, QUIZ_SCORE, QUIZ_TIME, TIMER } = APP_SESSION_STORAGE;
-const MAX_QUIZ_TIME = questions.length * 30 * 1000;
+const {
+  USER_ANSWERS,
+  USER_QUIZ_SCORE,
+  USER_QUIZ_TIME,
+  QUIZ_TIME_PER_QUESTION,
+  TIMER,
+} = APP_SESSION_STORAGE;
 
 function Questions() {
-  const _timer = sessionStorage.getItem(TIMER) || MAX_QUIZ_TIME;
+  const quizTimePerQuestion =
+    sessionStorage.getItem(QUIZ_TIME_PER_QUESTION) || 30;
+  const maxQuizTime = questions.length * quizTimePerQuestion * 1000;
+  const _timer = sessionStorage.getItem(TIMER) || maxQuizTime;
   const [questionNumber, setQuestionNumber] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [time, setTime] = useState(_timer);
@@ -22,7 +30,7 @@ function Questions() {
 
   const submitAnswers = useCallback(() => {
     let _quizTime =
-      time === 0 ? formatTime(MAX_QUIZ_TIME) : formatTime(MAX_QUIZ_TIME - time);
+      time === 0 ? formatTime(maxQuizTime) : formatTime(maxQuizTime - time);
     let quizScore = 0;
     user_answer.forEach((ans) => {
       const correctAnswer = answers.find(
@@ -32,12 +40,12 @@ function Questions() {
         quizScore = quizScore + (1 / questions.length) * 100;
       }
     });
-    sessionStorage.setItem(QUIZ_SCORE, quizScore);
-    sessionStorage.setItem(QUIZ_TIME, _quizTime);
+    sessionStorage.setItem(USER_QUIZ_SCORE, quizScore);
+    sessionStorage.setItem(USER_QUIZ_TIME, _quizTime);
     sessionStorage.removeItem(USER_ANSWERS);
     sessionStorage.removeItem(TIMER);
     history.replace(FINISH_PATH);
-  }, [time, user_answer, history]);
+  }, [maxQuizTime, time, user_answer, history]);
 
   useEffect(() => {
     if (time === 0) {

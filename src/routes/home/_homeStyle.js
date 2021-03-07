@@ -1,4 +1,20 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const glowingAnimation = keyframes`
+  0% {
+    background-color: #ff5d5d;
+    opacity: 0.4;
+    box-shadow: 0 0 5px #ff5d5d;
+  }
+  50% {
+    opacity: 0.7;
+    box-shadow: 0 0 20px #2185d0;
+  }
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 5px #2185d0;
+  }
+`;
 
 export const Container = styled.div`
   display: flex;
@@ -17,6 +33,7 @@ export const Container = styled.div`
 
   > button {
     margin-top: 24px !important;
+    animation: ${glowingAnimation} 2000ms infinite;
   }
 
   @media only screen and (min-width: 768px) {
@@ -26,6 +43,13 @@ export const Container = styled.div`
 
     > button {
       width: 240px !important;
+      margin-top: 60px !important;
     }
+  }
+`;
+
+export const ContentWrapper = styled.div`
+  form {
+    margin-top: 20px;
   }
 `;
