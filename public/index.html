@@ -25,6 +25,7 @@
     />
     <title>Aplikasi Kuis Seputar Sumatera Utara</title>
     <script>
+      const { NODE_ENV } = process.env;
       window.fbAsyncInit = function () {
         FB.init({
           appId: "1051251482023398",
@@ -32,7 +33,9 @@
           xfbml: true,
           version: "v10.0",
         });
-        FB.AppEvents.logPageView();
+        if (NODE_ENV === "production") {
+          FB.AppEvents.logPageView();
+        }
       };
       (function (d, s, id) {
         var js,

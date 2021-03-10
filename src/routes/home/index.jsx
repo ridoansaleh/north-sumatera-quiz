@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Image, Button, Modal, Form, Select } from "semantic-ui-react";
 import { Container, ContentWrapper } from "./_homeStyle";
 import questionsIllustration from "./undraw_Questions_re_1fy7.svg";
+import { logFbEvent } from "../../fb_event";
 import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
 
 const { QUESTIONS_PATH } = APP_PATHS;
@@ -22,12 +23,12 @@ function Home() {
   const history = useHistory();
 
   const handleStartClick = () => {
-    window.FB.AppEvents.logEvent("Ayo Mulai button clicked");
+    logFbEvent("Ayo Mulai button clicked");
     setDisplayModal(true);
   };
 
   const handleLevelChange = (_, { value }) => {
-    window.FB.AppEvents.logEvent(`Ubah level ke ${value}`);
+    logFbEvent(`Ubah level ke ${value}`);
     switch (value) {
       case "Mudah":
         sessionStorage.setItem(QUIZ_TIME_PER_QUESTION, 30);
@@ -50,13 +51,13 @@ function Home() {
   };
 
   const handleBatalClick = () => {
-    window.FB.AppEvents.logEvent("Batal button clicked");
+    logFbEvent("Batal button clicked");
     setDisplayModal(false);
   };
 
   const handleMainkanSekarangClick = () => {
-    window.FB.AppEvents.logEvent("Mainkan Sekarang button clicked");
-    window.FB.AppEvents.logEvent(`Kuis level - ${quizLevel}`);
+    logFbEvent("Mainkan Sekarang button clicked");
+    logFbEvent(`Kuis level - ${quizLevel}`);
     history.replace(QUESTIONS_PATH);
   };
 
