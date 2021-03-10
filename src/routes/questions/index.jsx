@@ -4,6 +4,7 @@ import { Button } from "semantic-ui-react";
 import Question from "../../components/question/index.jsx";
 import { Container, Time, Navigation } from "./_questionsStyle";
 import { questions, answers } from "./data";
+import { logFbEvent } from "../../fb_event";
 import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
 
 const { FINISH_PATH } = APP_PATHS;
@@ -49,7 +50,7 @@ function Questions() {
 
   useEffect(() => {
     if (time === 0) {
-      window.FB.AppEvents.logEvent("Habis waktu Redirect");
+      logFbEvent("Habis waktu Redirect");
       submitAnswers();
       return;
     }
@@ -90,19 +91,17 @@ function Questions() {
   };
 
   const handleKembaliClick = () => {
-    window.FB.AppEvents.logEvent("Kembali button clicked");
+    logFbEvent("Kembali button clicked");
     setQuestionNumber((prevState) => prevState - 1);
   };
 
   const handleLanjutClick = () => {
     if (questionNumber < questions.length - 1) {
-      window.FB.AppEvents.logEvent(
-        `Lanjut button ${questionNumber + 1} clicked`
-      );
+      logFbEvent(`Lanjut button ${questionNumber + 1} clicked`);
       setQuestionNumber((prevState) => prevState + 1);
       setSelectedAnswer("");
     } else {
-      window.FB.AppEvents.logEvent("Selesai button clicked");
+      logFbEvent("Selesai button clicked");
       submitAnswers();
     }
   };

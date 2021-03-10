@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Icon, Button } from "semantic-ui-react";
 import { Container, Warning } from "./_finishStyle";
+import { logFbEvent } from "../../fb_event";
 import {
   APP_PATHS,
   APP_SESSION_STORAGE,
@@ -25,7 +26,7 @@ function Finish() {
   });
 
   const handleCobaLagiClick = () => {
-    window.FB.AppEvents.logEvent("Coba Lagi button clicked");
+    logFbEvent("Coba Lagi button clicked");
     history.replace(QUESTIONS_PATH);
   };
 
