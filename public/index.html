@@ -24,31 +24,6 @@
       content="https://raw.githubusercontent.com/ridoansaleh/north-sumatera-quiz/main/public/aerial-lake-toba-samosir-island-view.jpg"
     />
     <title>Aplikasi Kuis Seputar Sumatera Utara</title>
-    <script>
-      const { NODE_ENV } = process.env;
-      window.fbAsyncInit = function () {
-        FB.init({
-          appId: "1051251482023398",
-          cookie: true,
-          xfbml: true,
-          version: "v10.0",
-        });
-        if (NODE_ENV === "production") {
-          FB.AppEvents.logPageView();
-        }
-      };
-      (function (d, s, id) {
-        var js,
-          fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) {
-          return;
-        }
-        js = d.createElement(s);
-        js.id = id;
-        js.src = "https://connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      })(document, "script", "facebook-jssdk");
-    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

@@ -12,6 +12,7 @@ const {
   USER_ANSWERS,
   USER_QUIZ_SCORE,
   USER_QUIZ_TIME,
+  USER_QUIZ_REVIEW,
   QUIZ_TIME_PER_QUESTION,
   TIMER,
 } = APP_SESSION_STORAGE;
@@ -26,27 +27,43 @@ function Questions() {
   const [time, setTime] = useState(_timer);
   const history = useHistory();
 
-  let user_answer = sessionStorage.getItem(USER_ANSWERS);
-  user_answer = user_answer ? JSON.parse(user_answer) : [];
+  let user_answers = sessionStorage.getItem(USER_ANSWERS);
+  user_answers = user_answers ? JSON.parse(user_answers) : [];
 
   const submitAnswers = useCallback(() => {
     let _quizTime =
       time === 0 ? formatTime(maxQuizTime) : formatTime(maxQuizTime - time);
     let quizScore = 0;
-    user_answer.forEach((ans) => {
+    let reviewQuiz = [];
+    user_answers.forEach((ans) => {
       const correctAnswer = answers.find(
         (correctAns) => correctAns.id === ans.id
       );
       if (ans.answer === correctAnswer.answer) {
         quizScore = quizScore + (1 / questions.length) * 100;
+        reviewQuiz.push({
+          question: questions.find((qs) => qs.id === ans.id).question,
+          answer: ans.answer,
+          status: true,
+        });
+      } else {
+        reviewQuiz.push({
+          question: questions.find((qs) => qs.id === ans.id).question,
+          answer: ans.answer,
+          status: false,
+        });
       }
     });
+    reviewQuiz = JSON.stringify(reviewQuiz);
+    sessionStorage.setItem(USER_QUIZ_REVIEW, reviewQuiz);
     sessionStorage.setItem(USER_QUIZ_SCORE, quizScore);
     sessionStorage.setItem(USER_QUIZ_TIME, _quizTime);
     sessionStorage.removeItem(USER_ANSWERS);
     sessionStorage.removeItem(TIMER);
+    logFbEvent(`User quiz score - ${quizScore}`);
+    logFbEvent(`User quiz time - ${_quizTime}`);
     history.replace(FINISH_PATH);
-  }, [maxQuizTime, time, user_answer, history]);
+  }, [maxQuizTime, time, user_answers, history]);
 
   useEffect(() => {
     if (time === 0) {
@@ -63,13 +80,13 @@ function Questions() {
   }, [time, submitAnswers]);
 
   useEffect(() => {
-    const foundAnswer = user_answer.find(
+    const foundAnswer = user_answers.find(
       (ans) => ans.id === questionNumber + 1
     );
     if (foundAnswer) {
       setSelectedAnswer(foundAnswer.answer);
     }
-  }, [user_answer, questionNumber]);
+  }, [user_answers, questionNumber]);
 
   const handleSelectAnswer = (answer, questionID) => {
     setSelectedAnswer(answer);
@@ -77,11 +94,11 @@ function Questions() {
       id: questionID,
       answer,
     };
-    const existAnswer = user_answer.find((ans) => ans.id === questionID);
+    const existAnswer = user_answers.find((ans) => ans.id === questionID);
     if (!existAnswer) {
-      user_answer.push(answer_detail);
+      user_answers.push(answer_detail);
     }
-    const updated_user_answer = user_answer.map((ans) => {
+    const updated_user_answer = user_answers.map((ans) => {
       if (ans.id === questionID) {
         return answer_detail;
       }
