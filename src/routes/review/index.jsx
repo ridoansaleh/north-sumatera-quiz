@@ -15,7 +15,7 @@ function Review() {
   userQuizReview = userQuizReview ? JSON.parse(userQuizReview) : [];
 
   const handleToggleAnswer = (index) => {
-    logFbEvent(`Answer of question no. ${index + 1} was toggled`);
+    logFbEvent(`Answer of question number ${index + 1} was toggled`);
     setActiveIndex(index);
   };
 
