@@ -36,6 +36,6 @@ export const initFbSDK = () => {
 };
 
 export const logFbEvent = (event) => {
-  if (NODE_ENV !== "production") return;
+  if (NODE_ENV !== "production" || !window.FB) return;
   window.FB.AppEvents.logEvent(event);
 };
