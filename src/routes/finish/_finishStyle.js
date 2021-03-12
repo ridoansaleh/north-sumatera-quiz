@@ -24,3 +24,10 @@ export const Warning = styled.div`
     padding: 15px 75px;
   }
 `;
+
+export const ShareContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  width: 110px;
+`;
