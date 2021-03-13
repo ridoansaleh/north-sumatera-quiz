@@ -1,20 +1,14 @@
+import { memo } from "react";
 import { Image } from "semantic-ui-react";
 import { Container, Answers, Option } from "./_questionStyle";
 
-function Question({
-  id,
-  image,
-  image_source,
-  question,
-  answers,
-  selectedAnswer,
-  onSelectedAnswer,
-}) {
+function Question({ questionDetail, selectedAnswer, onSelectedAnswer }) {
+  const { id, number, image, image_source, question, answers } = questionDetail;
   return (
     <Container>
       <Image src={image} alt={`Sumber gambar ${image_source}`} />
       <p>
-        {id}) {question}
+        {number}) {question}
       </p>
       <Answers>
         <div>
@@ -50,4 +44,4 @@ function Question({
   );
 }
 
-export default Question;
+export default memo(Question);

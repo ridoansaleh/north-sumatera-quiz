@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Button } from "semantic-ui-react";
 import Question from "../../components/question/index.jsx";
 import { Container, Time, Navigation } from "./_questionsStyle";
-import { questions, answers } from "./data";
+import { answers, generateQuestions } from "./data";
 import { logFbEvent } from "../../fb_event";
 import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
 
@@ -14,21 +14,35 @@ const {
   USER_QUIZ_TIME,
   USER_QUIZ_REVIEW,
   QUIZ_TIME_PER_QUESTION,
+  QUIZ_QUESTIONS,
   TIMER,
 } = APP_SESSION_STORAGE;
+
+let existingQuestions = sessionStorage.getItem(QUIZ_QUESTIONS);
+existingQuestions = existingQuestions ? JSON.parse(existingQuestions) : null;
+
+let questions = existingQuestions || generateQuestions();
+
+questions = questions.map((qn, index) => ({
+  number: index + 1,
+  ...qn,
+}));
+
+sessionStorage.setItem(QUIZ_QUESTIONS, JSON.stringify(questions));
 
 function Questions() {
   const quizTimePerQuestion =
     sessionStorage.getItem(QUIZ_TIME_PER_QUESTION) || 30;
   const maxQuizTime = questions.length * quizTimePerQuestion * 1000;
   const _timer = sessionStorage.getItem(TIMER) || maxQuizTime;
+  let user_answers = sessionStorage.getItem(USER_ANSWERS);
+  user_answers = user_answers ? JSON.parse(user_answers) : [];
+
   const [questionNumber, setQuestionNumber] = useState(0);
+  const [activeQuestion, setActiveQuestion] = useState(questions[0]);
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [time, setTime] = useState(_timer);
   const history = useHistory();
-
-  let user_answers = sessionStorage.getItem(USER_ANSWERS);
-  user_answers = user_answers ? JSON.parse(user_answers) : [];
 
   const submitAnswers = useCallback(() => {
     let _quizTime =
@@ -60,6 +74,7 @@ function Questions() {
     sessionStorage.setItem(USER_QUIZ_TIME, _quizTime);
     sessionStorage.removeItem(USER_ANSWERS);
     sessionStorage.removeItem(TIMER);
+    sessionStorage.removeItem(QUIZ_QUESTIONS);
     logFbEvent(`User quiz score - ${quizScore}`);
     logFbEvent(`User quiz time - ${_quizTime}`);
     history.replace(FINISH_PATH);
@@ -81,31 +96,40 @@ function Questions() {
 
   useEffect(() => {
     const foundAnswer = user_answers.find(
-      (ans) => ans.id === questionNumber + 1
+      (ans) => ans.id === activeQuestion.id
     );
     if (foundAnswer) {
       setSelectedAnswer(foundAnswer.answer);
+    } else {
+      setSelectedAnswer("");
     }
-  }, [user_answers, questionNumber]);
+  }, [user_answers, activeQuestion]);
 
-  const handleSelectAnswer = (answer, questionID) => {
-    setSelectedAnswer(answer);
-    let answer_detail = {
-      id: questionID,
-      answer,
-    };
-    const existAnswer = user_answers.find((ans) => ans.id === questionID);
-    if (!existAnswer) {
-      user_answers.push(answer_detail);
-    }
-    const updated_user_answer = user_answers.map((ans) => {
-      if (ans.id === questionID) {
-        return answer_detail;
+  useEffect(() => {
+    setActiveQuestion(questions[questionNumber]);
+  }, [questionNumber]);
+
+  const handleSelectAnswer = useCallback(
+    (answer, questionID) => {
+      let answer_detail = {
+        id: questionID,
+        answer,
+      };
+      const isAnswerExist = user_answers.find((ans) => ans.id === questionID);
+      if (!isAnswerExist) {
+        user_answers.push(answer_detail);
       }
-      return ans;
-    });
-    sessionStorage.setItem(USER_ANSWERS, JSON.stringify(updated_user_answer));
-  };
+      const updated_user_answer = user_answers.map((ans) => {
+        if (ans.id === questionID) {
+          return answer_detail;
+        }
+        return ans;
+      });
+      sessionStorage.setItem(USER_ANSWERS, JSON.stringify(updated_user_answer));
+      setSelectedAnswer(answer);
+    },
+    [user_answers]
+  );
 
   const handleKembaliClick = () => {
     logFbEvent("Kembali button clicked");
@@ -116,7 +140,6 @@ function Questions() {
     if (questionNumber < questions.length - 1) {
       logFbEvent(`Lanjut button ${questionNumber + 1} clicked`);
       setQuestionNumber((prevState) => prevState + 1);
-      setSelectedAnswer("");
     } else {
       logFbEvent("Selesai button clicked");
       submitAnswers();
@@ -130,7 +153,8 @@ function Questions() {
     if (seconds >= 60) {
       minutes = Math.floor(seconds / 60);
       seconds = seconds % 60;
-      timeText = `${minutes} menit ${seconds} detik`;
+      let secondsText = seconds > 0 ? `${seconds} detik` : "";
+      timeText = `${minutes} menit ${secondsText}`;
       return timeText;
     }
     timeText = `${seconds} detik`;
@@ -143,7 +167,7 @@ function Questions() {
         Sisa waktu: <span>{formatTime(time)}</span>
       </Time>
       <Question
-        {...questions[questionNumber]}
+        questionDetail={activeQuestion}
         selectedAnswer={selectedAnswer}
         onSelectedAnswer={handleSelectAnswer}
       />

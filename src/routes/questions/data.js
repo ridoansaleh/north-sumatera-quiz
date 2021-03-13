@@ -8,8 +8,13 @@ import image_07 from "./images/padang-halaban.png";
 import image_08 from "./images/puncak-galau.jpg";
 import image_09 from "./images/kebun-teh-bah-butong-sidamanik.jpg";
 import image_10 from "./images/pemandian-lau-timah.jpg";
+import image_11 from "./images/danau-pondok-limo.jpg";
+import image_12 from "./images/desa-lingga.jpg";
+import image_13 from "./images/air-terjun-dua-warna-sibolangit.jpg";
+import image_14 from "./images/bukit-lawang-ecotourism-ecoproject.jpg";
+import image_15 from "./images/pantai-hilitasaro-toma.jpg";
 
-export const questions = [
+const questions = [
   {
     id: 1,
     question: "Berapakah jumlah Kabupaten dan Kota di Provinsi Sumatera Utara?",
@@ -80,7 +85,66 @@ export const questions = [
     image: image_10,
     image_source: "https://www.andalastourism.com",
   },
+  {
+    id: 11,
+    question: "Apakah nama Ibu Kota Kabupaten Mandailing Natal?",
+    answers: ["Kotanopan", "Panyabungan", "Siabu", "Natal"],
+    image: image_11,
+    image_source: "https://jejaktrip.com",
+  },
+  {
+    id: 12,
+    question: "Apakah nama Ibu Kota Kabupaten Karo?",
+    answers: ["Berastagi", "Sibolangit", "Kabanjahe", "Tigabinaga"],
+    image: image_12,
+    image_source: "https://silima-merga.blogspot.com/",
+  },
+  {
+    id: 13,
+    question: "Apakah nama Ibu Kota Kabupaten Deli Serdang?",
+    answers: ["Sibolangit", "Belawan", "Tanjung Morawa", "Lubuk Pakam"],
+    image: image_13,
+    image_source: "https://www.tempatwisata.pro",
+  },
+  {
+    id: 14,
+    question: "Apakah nama Ibu Kota Kabupaten Langkat?",
+    answers: ["Stabat", "Binjai", "Pangkalansusu", "Tanjungpura"],
+    image: image_14,
+    image_source: "https://www.itrip.id",
+  },
+  {
+    id: 15,
+    question: "Apakah nama Ibu Kota Nias Selatan?",
+    answers: ["Hiliobolata", "Telukdalam", "Botohili", "Hilibafunua"],
+    image: image_15,
+    image_source: "https://portalwisata.co.id/",
+  },
 ];
+
+const questionOption1 = [1, 3, 14, 5, 7, 2, 9, 11, 13, 15];
+const questionOption2 = [3, 1, 10, 5, 15, 9, 4, 2, 13, 7];
+const questionOption3 = [2, 4, 5, 1, 14, 11, 6, 9, 8, 12];
+const questionOption4 = [15, 13, 5, 7, 9, 11, 3, 10, 8, 4];
+const questionOption5 = [8, 11, 15, 7, 9, 3, 13, 6, 10, 12];
+
+export const generateQuestions = () => {
+  const index = Math.floor(Math.random() * 5) + 1;
+  switch (index) {
+    case 1:
+      return questionOption1.map((id) => questions.find((qn) => qn.id === id));
+    case 2:
+      return questionOption2.map((id) => questions.find((qn) => qn.id === id));
+    case 3:
+      return questionOption3.map((id) => questions.find((qn) => qn.id === id));
+    case 4:
+      return questionOption4.map((id) => questions.find((qn) => qn.id === id));
+    case 5:
+      return questionOption5.map((id) => questions.find((qn) => qn.id === id));
+    default:
+      return questionOption1.map((id) => questions.find((qn) => qn.id === id));
+  }
+};
 
 export const answers = [
   {
@@ -122,5 +186,25 @@ export const answers = [
   {
     id: 10,
     answer: "Sidikalang",
+  },
+  {
+    id: 11,
+    answer: "Panyabungan",
+  },
+  {
+    id: 12,
+    answer: "Kabanjahe",
+  },
+  {
+    id: 13,
+    answer: "Lubuk Pakam",
+  },
+  {
+    id: 14,
+    answer: "Stabat",
+  },
+  {
+    id: 15,
+    answer: "Telukdalam",
   },
 ];
