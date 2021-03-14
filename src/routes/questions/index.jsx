@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "semantic-ui-react";
-import Question from "../../components/question/index.jsx";
-import { Container, Time, Navigation } from "./_questionsStyle";
+import Question from "./sections/Question.jsx";
+import { Container, Time, Navigation } from "./styles/_questionsStyle";
 import { answers, generateQuestions } from "./data";
 import { logFbEvent } from "../../fb_event";
+import { formatTime } from "./utils";
 import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
 
 const { FINISH_PATH } = APP_PATHS;
@@ -144,21 +145,6 @@ function Questions() {
       logFbEvent("Selesai button clicked");
       submitAnswers();
     }
-  };
-
-  const formatTime = (time) => {
-    let timeText = "";
-    let seconds = time / 1000;
-    let minutes = 0;
-    if (seconds >= 60) {
-      minutes = Math.floor(seconds / 60);
-      seconds = seconds % 60;
-      let secondsText = seconds > 0 ? `${seconds} detik` : "";
-      timeText = `${minutes} menit ${secondsText}`;
-      return timeText;
-    }
-    timeText = `${seconds} detik`;
-    return timeText;
   };
 
   return (
