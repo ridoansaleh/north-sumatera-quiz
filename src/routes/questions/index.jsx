@@ -157,7 +157,7 @@ function Questions() {
         selectedAnswer={selectedAnswer}
         onSelectedAnswer={handleSelectAnswer}
       />
-      <Navigation>
+      <Navigation isSticky={selectedAnswer !== ""}>
         {questionNumber > 0 && (
           <Button
             className="kembali-btn"

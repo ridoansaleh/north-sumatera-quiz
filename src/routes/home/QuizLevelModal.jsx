@@ -14,7 +14,7 @@ const optionsLevel = [
 ];
 
 const { QUESTIONS_PATH } = APP_PATHS;
-const { QUIZ_TIME_PER_QUESTION } = APP_SESSION_STORAGE;
+const { QUIZ_TIME_PER_QUESTION, USER_QUIZ_LEVEL } = APP_SESSION_STORAGE;
 
 function QuizLevelModal({ displayModal, setDisplayModal }) {
   const [quizLevel, setQuizLevel] = useState("");
@@ -40,6 +40,7 @@ function QuizLevelModal({ displayModal, setDisplayModal }) {
         break;
       default:
     }
+    sessionStorage.setItem(USER_QUIZ_LEVEL, value);
     setQuizLevel(value);
   };
 

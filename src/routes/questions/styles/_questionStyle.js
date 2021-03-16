@@ -3,10 +3,6 @@ import styled from "styled-components";
 export const Container = styled.div`
   margin-bottom: 20px;
 
-  p {
-    margin-top: 15px;
-  }
-
   img {
     width: 100%;
     height: 275px;
@@ -22,6 +18,15 @@ export const Container = styled.div`
     img {
       height: 400px;
     }
+  }
+`;
+
+export const QuestionWrapper = styled.div`
+  display: flex;
+  margin: 15px 0;
+
+  div:nth-child(1) {
+    margin-right: 10px;
   }
 `;
 

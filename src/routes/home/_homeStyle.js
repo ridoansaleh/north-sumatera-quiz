@@ -17,6 +17,7 @@ const glowingAnimation = keyframes`
 `;
 
 export const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -51,5 +52,19 @@ export const Container = styled.div`
 export const ContentWrapper = styled.div`
   form {
     margin-top: 20px;
+  }
+`;
+
+export const Version = styled.div`
+  position: absolute;
+  bottom: 24px;
+  text-align: center;
+  width: calc(100% - 48px);
+  font-size: 13px;
+
+  @media only screen and (min-width: 768px) {
+    position: relative;
+    top: 40px;
+    bottom: 24px;
   }
 `;

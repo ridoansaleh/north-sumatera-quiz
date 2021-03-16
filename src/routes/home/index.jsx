@@ -1,12 +1,16 @@
-import { useState, lazy } from "react";
+import { useState, useEffect, lazy } from "react";
 import { Image, Button } from "semantic-ui-react";
-import { Container } from "./_homeStyle";
+import { Container, Version } from "./_homeStyle";
 import questionsIllustration from "./undraw_Questions_re_1fy7.svg";
 import { logFbEvent } from "../../fb_event";
 const QuizLevelModal = lazy(() => import("./QuizLevelModal.jsx"));
 
 function Home() {
   const [displayModal, setDisplayModal] = useState(false);
+
+  useEffect(() => {
+    sessionStorage.clear();
+  }, []);
 
   const handleStartClick = () => {
     logFbEvent("Ayo Mulai button clicked");
@@ -23,6 +27,7 @@ function Home() {
       <Button primary fluid onClick={handleStartClick}>
         Ayo Mulai!
       </Button>
+      <Version>Kuis Sumut - versi 1.1</Version>
       <QuizLevelModal
         displayModal={displayModal}
         setDisplayModal={setDisplayModal}

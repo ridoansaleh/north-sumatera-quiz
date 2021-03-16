@@ -14,6 +14,17 @@ export const Container = styled.div`
   }
 `;
 
+export const UserStats = styled.div`
+  margin-top: 10px;
+  font-size: 17px;
+  font-weight: bold;
+  font-family: Lato;
+
+  > div {
+    margin-bottom: 10px;
+  }
+`;
+
 export const Warning = styled.div`
   margin-top: 40px;
   background-color: #fc806f;
@@ -29,5 +40,5 @@ export const ShareContainer = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 40px;
-  width: 110px;
+  width: 125px;
 `;

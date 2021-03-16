@@ -1,15 +1,21 @@
 import { memo } from "react";
 import { Image } from "semantic-ui-react";
-import { Container, Answers, Option } from "../styles/_questionStyle";
+import {
+  Container,
+  QuestionWrapper,
+  Answers,
+  Option,
+} from "../styles/_questionStyle";
 
 function Question({ questionDetail, selectedAnswer, onSelectedAnswer }) {
   const { id, number, image, image_source, question, answers } = questionDetail;
   return (
     <Container>
       <Image src={image} alt={`Sumber gambar ${image_source}`} />
-      <p>
-        {number}) {question}
-      </p>
+      <QuestionWrapper>
+        <div>{number})</div>
+        <div>{question}</div>
+      </QuestionWrapper>
       <Answers>
         <div>
           <Option
