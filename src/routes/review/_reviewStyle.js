@@ -8,6 +8,10 @@ export const Container = styled.div`
   padding: 24px;
   text-align: center;
 
+  > h2 {
+    margin-bottom: 24px;
+  }
+
   .answer {
     padding-left: 10px;
   }

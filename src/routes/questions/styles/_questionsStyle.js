@@ -1,10 +1,10 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 100vh;
+  min-height: calc(100vh - 48px);
   padding: 24px;
 
   > button {
@@ -38,13 +38,32 @@ export const Navigation = styled.div`
   flex-direction: column-reverse;
   margin-top: 24px;
 
+  ${({ isSticky }) =>
+    isSticky &&
+    css`
+      position: sticky;
+      bottom: 0;
+      background-color: #fff;
+      padding: 24px;
+      box-shadow: 0 -3px 1px #f3eceb;
+      margin-top: 0;
+      margin-left: -24px;
+      margin-right: -24px;
+      z-index: 100;
+      transition: position 5s ease-in 3s;
+    `}
+
   .kembali-btn {
     margin-top: 10px !important;
   }
 
   @media only screen and (min-width: 768px) {
+    position: relative;
     justify-content: center;
     flex-direction: row;
+    padding: 0;
+    margin-top: 24px;
+    box-shadow: none;
 
     .kembali-btn {
       margin-right: 10px !important;

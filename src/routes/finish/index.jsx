@@ -8,7 +8,7 @@ import {
   WhatsappShareButton,
   WhatsappIcon,
 } from "react-share";
-import { Container, Warning, ShareContainer } from "./_finishStyle";
+import { Container, Warning, UserStats, ShareContainer } from "./_finishStyle";
 import { logFbEvent } from "../../fb_event";
 import {
   APP_PATHS,
@@ -21,18 +21,21 @@ const {
   USER_QUIZ_SCORE,
   USER_QUIZ_TIME,
   USER_QUIZ_REVIEW,
+  USER_QUIZ_LEVEL,
   TIMER,
 } = APP_SESSION_STORAGE;
 
 function Finish() {
   const history = useHistory();
 
-  const quizScore = sessionStorage.getItem(USER_QUIZ_SCORE);
-  const quizTime = sessionStorage.getItem(USER_QUIZ_TIME);
+  const quizScore = sessionStorage.getItem(USER_QUIZ_SCORE) || " - ";
+  const quizTime = sessionStorage.getItem(USER_QUIZ_TIME) || " - ";
+  const quizLevel = sessionStorage.getItem(USER_QUIZ_LEVEL) || " - ";
 
   const handleCobaLagiClick = () => {
     sessionStorage.removeItem(TIMER);
     sessionStorage.removeItem(USER_QUIZ_SCORE);
+    sessionStorage.removeItem(USER_QUIZ_LEVEL);
     sessionStorage.removeItem(USER_QUIZ_REVIEW);
     logFbEvent("Coba Lagi button clicked");
     history.replace(QUESTIONS_PATH);
@@ -52,8 +55,11 @@ function Finish() {
         <Icon name="x" size="massive" color="red" />
       )}
       <h3>Kamu telah menyelesaikan Kuis Seputar Sumatera Utara</h3>
-      <h3>Nilai: {quizScore}</h3>
-      <h3>Waktu: {quizTime}</h3>
+      <UserStats>
+        <div>Nilai: {quizScore}</div>
+        <div>Waktu: {quizTime}</div>
+        <div>Level: {quizLevel}</div>
+      </UserStats>
       <Button
         className="review-btn"
         color="grey"
