@@ -49,12 +49,6 @@ export const Container = styled.div`
   }
 `;
 
-export const ContentWrapper = styled.div`
-  form {
-    margin-top: 20px;
-  }
-`;
-
 export const Version = styled.div`
   position: absolute;
   bottom: 24px;

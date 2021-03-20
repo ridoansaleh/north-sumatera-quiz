@@ -3,9 +3,9 @@ import { useHistory } from "react-router-dom";
 import { Button } from "semantic-ui-react";
 import Question from "./sections/Question.jsx";
 import { Container, Time, Navigation } from "./styles/_questionsStyle";
-import { answers, generateQuestions } from "./data";
 import { logFbEvent } from "../../fb_event";
 import { formatTime } from "./utils";
+import { answers, generateQuestions } from "./data";
 import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
 
 const { FINISH_PATH } = APP_PATHS;
@@ -16,6 +16,7 @@ const {
   USER_QUIZ_REVIEW,
   QUIZ_TIME_PER_QUESTION,
   QUIZ_QUESTIONS,
+  QUESTION_NUMBER,
   TIMER,
 } = APP_SESSION_STORAGE;
 
@@ -31,22 +32,27 @@ questions = questions.map((qn, index) => ({
 
 sessionStorage.setItem(QUIZ_QUESTIONS, JSON.stringify(questions));
 
+const _questionNumber = sessionStorage.getItem(QUESTION_NUMBER) || 0;
+
 function Questions() {
   const quizTimePerQuestion =
     sessionStorage.getItem(QUIZ_TIME_PER_QUESTION) || 30;
   const maxQuizTime = questions.length * quizTimePerQuestion * 1000;
   const _timer = sessionStorage.getItem(TIMER) || maxQuizTime;
-  let user_answers = sessionStorage.getItem(USER_ANSWERS);
-  user_answers = user_answers ? JSON.parse(user_answers) : [];
 
-  const [questionNumber, setQuestionNumber] = useState(0);
-  const [activeQuestion, setActiveQuestion] = useState(questions[0]);
+  const [questionNumber, setQuestionNumber] = useState(_questionNumber);
+  const [activeQuestion, setActiveQuestion] = useState(
+    questions[_questionNumber]
+  );
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [time, setTime] = useState(_timer);
   const history = useHistory();
 
+  let user_answers = sessionStorage.getItem(USER_ANSWERS);
+  user_answers = user_answers ? JSON.parse(user_answers) : [];
+
   const submitAnswers = useCallback(() => {
-    let _quizTime =
+    let quizTime =
       time === 0 ? formatTime(maxQuizTime) : formatTime(maxQuizTime - time);
     let quizScore = 0;
     let reviewQuiz = [];
@@ -72,12 +78,13 @@ function Questions() {
     reviewQuiz = JSON.stringify(reviewQuiz);
     sessionStorage.setItem(USER_QUIZ_REVIEW, reviewQuiz);
     sessionStorage.setItem(USER_QUIZ_SCORE, quizScore);
-    sessionStorage.setItem(USER_QUIZ_TIME, _quizTime);
+    sessionStorage.setItem(USER_QUIZ_TIME, quizTime);
     sessionStorage.removeItem(USER_ANSWERS);
     sessionStorage.removeItem(TIMER);
     sessionStorage.removeItem(QUIZ_QUESTIONS);
+    sessionStorage.removeItem(QUESTION_NUMBER);
     logFbEvent(`User quiz score - ${quizScore}`);
-    logFbEvent(`User quiz time - ${_quizTime}`);
+    logFbEvent(`User quiz time - ${quizTime}`);
     history.replace(FINISH_PATH);
   }, [maxQuizTime, time, user_answers, history]);
 
@@ -107,6 +114,7 @@ function Questions() {
   }, [user_answers, activeQuestion]);
 
   useEffect(() => {
+    sessionStorage.setItem(QUESTION_NUMBER, questionNumber);
     setActiveQuestion(questions[questionNumber]);
   }, [questionNumber]);
 
