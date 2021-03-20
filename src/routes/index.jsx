@@ -1,5 +1,6 @@
 import { Suspense, lazy } from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
+import Loading from "../components/Loading/index.jsx";
 import { APP_PATHS } from "../constant";
 const Home = lazy(() => import("./home/index.jsx"));
 const Questions = lazy(() => import("./questions/index.jsx"));
@@ -11,7 +12,7 @@ const { HOME_PATH, QUESTIONS_PATH, FINISH_PATH, REVIEW_PATH } = APP_PATHS;
 function App() {
   return (
     <Router>
-      <Suspense fallback={null}>
+      <Suspense fallback={<Loading />}>
         <Switch>
           <Route path={HOME_PATH} exact>
             <Home />

@@ -37,8 +37,11 @@ export const Warning = styled.div`
 `;
 
 export const ShareContainer = styled.div`
+  margin-top: 40px;
+`;
+
+export const SocialIconWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 40px;
   width: 125px;
 `;

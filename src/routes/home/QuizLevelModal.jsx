@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Button, Modal, Form, Select } from "semantic-ui-react";
-import { ContentWrapper } from "./_homeStyle";
+import { Button, Modal, Form, Radio } from "semantic-ui-react";
 import { logFbEvent } from "../../fb_event";
 import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
 
-const optionsLevel = [
+const quizLevels = [
   { key: "m", text: "Mudah - 30 detik / soal", value: "Mudah" },
   { key: "sd", text: "Sedang - 20 detik / soal", value: "Sedang" },
   { key: "s", text: "Sulit - 10 detik / soal", value: "Sulit" },
@@ -21,7 +20,6 @@ function QuizLevelModal({ displayModal, setDisplayModal }) {
   const history = useHistory();
 
   const handleLevelChange = (_, { value }) => {
-    logFbEvent(`Ubah level ke ${value}`);
     switch (value) {
       case "Mudah":
         sessionStorage.setItem(QUIZ_TIME_PER_QUESTION, 30);
@@ -42,17 +40,15 @@ function QuizLevelModal({ displayModal, setDisplayModal }) {
     }
     sessionStorage.setItem(USER_QUIZ_LEVEL, value);
     setQuizLevel(value);
+    setTimeout(() => {
+      logFbEvent(`Kuis level - ${value}`);
+      history.replace(QUESTIONS_PATH);
+    }, 500);
   };
 
   const handleBatalClick = () => {
     logFbEvent("Batal button clicked");
     setDisplayModal(false);
-  };
-
-  const handleMainkanSekarangClick = () => {
-    logFbEvent("Mainkan Sekarang button clicked");
-    logFbEvent(`Kuis level - ${quizLevel}`);
-    history.replace(QUESTIONS_PATH);
   };
 
   return (
@@ -64,29 +60,24 @@ function QuizLevelModal({ displayModal, setDisplayModal }) {
     >
       <Modal.Header>Pilih Level Kuis!</Modal.Header>
       <Modal.Content>
-        <ContentWrapper>
-          Level kuis berguna untuk menentukan durasi waktu yang diperbolehkan
-          dalam mengerjakan kuis.
-          <Form>
-            <Form.Field
-              control={Select}
-              options={optionsLevel}
-              placeholder="Level"
-              onChange={handleLevelChange}
-            />
-          </Form>
-        </ContentWrapper>
+        <Form>
+          <Form.Field>Level kuis berfungsi menentukan durasi kuis</Form.Field>
+          {quizLevels.map((level) => (
+            <Form.Field key={level.key}>
+              <Radio
+                label={level.text}
+                name="quizLevel"
+                value={level.value}
+                checked={quizLevel === level.value}
+                onChange={handleLevelChange}
+              />
+            </Form.Field>
+          ))}
+        </Form>
       </Modal.Content>
       <Modal.Actions>
         <Button negative onClick={handleBatalClick}>
           Batal
-        </Button>
-        <Button
-          positive
-          disabled={quizLevel === ""}
-          onClick={handleMainkanSekarangClick}
-        >
-          Mainkan Sekarang
         </Button>
       </Modal.Actions>
     </Modal>

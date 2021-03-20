@@ -8,7 +8,13 @@ import {
   WhatsappShareButton,
   WhatsappIcon,
 } from "react-share";
-import { Container, Warning, UserStats, ShareContainer } from "./_finishStyle";
+import {
+  Container,
+  Warning,
+  UserStats,
+  ShareContainer,
+  SocialIconWrapper,
+} from "./_finishStyle";
 import { logFbEvent } from "../../fb_event";
 import {
   APP_PATHS,
@@ -35,7 +41,6 @@ function Finish() {
   const handleCobaLagiClick = () => {
     sessionStorage.removeItem(TIMER);
     sessionStorage.removeItem(USER_QUIZ_SCORE);
-    sessionStorage.removeItem(USER_QUIZ_LEVEL);
     sessionStorage.removeItem(USER_QUIZ_REVIEW);
     logFbEvent("Coba Lagi button clicked");
     history.replace(QUESTIONS_PATH);
@@ -73,26 +78,29 @@ function Finish() {
         </Warning>
       ) : (
         <ShareContainer>
-          <FacebookShareButton
-            quote={`Saya baru saja memperoleh nilai ${quizScore} dengan mengerjakan kuis Sumut dalam waktu ${quizTime}.`}
-            hashtag="#kuis"
-            url="https://kuis-sumut.netlify.app"
-          >
-            <FacebookIcon size={32} />
-          </FacebookShareButton>
-          <TwitterShareButton
-            title={`Saya baru saja memperoleh nilai ${quizScore} dengan mengerjakan kuis Sumut dalam waktu ${quizTime}.`}
-            hashtags={["kuis", "sumut", "sumatera", "utara", "senang"]}
-            url="https://kuis-sumut.netlify.app"
-          >
-            <TwitterIcon size={32} />
-          </TwitterShareButton>
-          <WhatsappShareButton
-            title={`Saya baru saja memperoleh nilai ${quizScore} dengan mengerjakan kuis Sumut dalam waktu ${quizTime}.`}
-            url="https://kuis-sumut.netlify.app"
-          >
-            <WhatsappIcon size={32} />
-          </WhatsappShareButton>
+          <h4>Bagikan di:</h4>
+          <SocialIconWrapper>
+            <FacebookShareButton
+              quote={`Saya baru saja memperoleh nilai ${quizScore} dengan mengerjakan kuis Sumut dalam waktu ${quizTime}.`}
+              hashtag="#kuis"
+              url="https://kuis-sumut.netlify.app"
+            >
+              <FacebookIcon size={32} />
+            </FacebookShareButton>
+            <TwitterShareButton
+              title={`Saya baru saja memperoleh nilai ${quizScore} dengan mengerjakan kuis Sumut dalam waktu ${quizTime}.`}
+              hashtags={["kuis", "sumut", "sumatera", "utara", "senang"]}
+              url="https://kuis-sumut.netlify.app"
+            >
+              <TwitterIcon size={32} />
+            </TwitterShareButton>
+            <WhatsappShareButton
+              title={`Saya baru saja memperoleh nilai ${quizScore} dengan mengerjakan kuis Sumut dalam waktu ${quizTime}.`}
+              url="https://kuis-sumut.netlify.app"
+            >
+              <WhatsappIcon size={32} />
+            </WhatsappShareButton>
+          </SocialIconWrapper>
         </ShareContainer>
       )}
     </Container>

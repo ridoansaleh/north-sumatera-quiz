@@ -2,6 +2,13 @@
 
 # North Sumatera Quiz
 
+Fitur-fitur yang dimiliki oleh aplikasi Kuis Sumatera Utara:
+
+1. Pilihan level kuis
+2. Review skor kuis
+3. Review setiap jawaban dari soal kuis
+4. Sharing skor kuis di Facebook, Twitter dan WhatsApp
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
