@@ -4,6 +4,7 @@ import "semantic-ui-css/semantic.min.css";
 import "./index.css";
 import App from "./routes/index.jsx";
 import { initFbSDK } from "./fb_event";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
 
 const runApp = () => {
@@ -11,7 +12,7 @@ const runApp = () => {
     <React.StrictMode>
       <App />
     </React.StrictMode>,
-    document.getElementById("root")
+    document.getElementById("nsq-root")
   );
 };
 
@@ -24,6 +25,8 @@ initFbSDK()
     console.warn("Your app have failed to load Facebook SDK");
     runApp();
   });
+
+serviceWorkerRegistration.register();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
