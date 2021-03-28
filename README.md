@@ -5,9 +5,15 @@
 Fitur-fitur yang dimiliki oleh aplikasi Kuis Sumatera Utara:
 
 1. Pilihan level kuis
+   - Mudah
+   - Sedang
+   - Sulit
+   - Sangat Sulit
+   - Dewa
 2. Review skor kuis
-3. Review setiap jawaban dari soal kuis
-4. Sharing skor kuis di Facebook, Twitter dan WhatsApp
+3. Sharing skor kuis di **Facebook**, **Twitter** dan **WhatsApp**
+4. Review setiap jawaban dari soal kuis
+5. Dapat di-install pada smartphone Anda sebagai PWA ([Progressive Web Apps](https://web.dev/progressive-web-apps/))
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

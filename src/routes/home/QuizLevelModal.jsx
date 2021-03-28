@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Modal, Form, Radio } from "semantic-ui-react";
 import { logFbEvent } from "../../fb_event";
+import session from "../../session_storage";
 import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
 
 const quizLevels = [
@@ -22,23 +23,23 @@ function QuizLevelModal({ displayModal, setDisplayModal }) {
   const handleLevelChange = (_, { value }) => {
     switch (value) {
       case "Mudah":
-        sessionStorage.setItem(QUIZ_TIME_PER_QUESTION, 30);
+        session.set(QUIZ_TIME_PER_QUESTION, 30);
         break;
       case "Sedang":
-        sessionStorage.setItem(QUIZ_TIME_PER_QUESTION, 20);
+        session.set(QUIZ_TIME_PER_QUESTION, 20);
         break;
       case "Sulit":
-        sessionStorage.setItem(QUIZ_TIME_PER_QUESTION, 10);
+        session.set(QUIZ_TIME_PER_QUESTION, 10);
         break;
       case "Super Sulit":
-        sessionStorage.setItem(QUIZ_TIME_PER_QUESTION, 5);
+        session.set(QUIZ_TIME_PER_QUESTION, 5);
         break;
       case "Dewa":
-        sessionStorage.setItem(QUIZ_TIME_PER_QUESTION, 2);
+        session.set(QUIZ_TIME_PER_QUESTION, 2);
         break;
       default:
     }
-    sessionStorage.setItem(USER_QUIZ_LEVEL, value);
+    session.set(USER_QUIZ_LEVEL, value);
     setQuizLevel(value);
     setTimeout(() => {
       logFbEvent(`Kuis level - ${value}`);

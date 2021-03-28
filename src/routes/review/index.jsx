@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Accordion, Icon, Button } from "semantic-ui-react";
 import { Container } from "./_reviewStyle";
 import { logFbEvent } from "../../fb_event";
+import session from "../../session_storage";
 import { APP_SESSION_STORAGE } from "../../constant";
 
 const { USER_QUIZ_REVIEW } = APP_SESSION_STORAGE;
@@ -11,8 +12,7 @@ function Review() {
   const [activeIndex, setActiveIndex] = useState(0);
   const history = useHistory();
 
-  let userQuizReview = sessionStorage.getItem(USER_QUIZ_REVIEW);
-  userQuizReview = userQuizReview ? JSON.parse(userQuizReview) : [];
+  let userQuizReview = session.get(USER_QUIZ_REVIEW, []);
 
   const handleToggleAnswer = (index) => {
     logFbEvent(`Answer of question number ${index + 1} was toggled`);
@@ -62,7 +62,7 @@ function Review() {
         ))}
       </Accordion>
       <Button primary onClick={handleBackClick}>
-        Back
+        Kembali
       </Button>
     </Container>
   );

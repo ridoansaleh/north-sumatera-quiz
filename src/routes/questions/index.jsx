@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useHistory } from "react-router-dom";
-import { Button } from "semantic-ui-react";
 import Question from "./sections/Question.jsx";
-import { Container, Time, Navigation } from "./styles/_questionsStyle";
+import Navigation from "./sections/Navigation.jsx";
+import { Container, Time } from "./styles/_questionsStyle";
 import { logFbEvent } from "../../fb_event";
+import session from "../../session_storage";
 import { formatTime } from "./utils";
 import { answers, generateQuestions } from "./data";
 import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
@@ -20,25 +21,21 @@ const {
   TIMER,
 } = APP_SESSION_STORAGE;
 
-let existingQuestions = sessionStorage.getItem(QUIZ_QUESTIONS);
-existingQuestions = existingQuestions ? JSON.parse(existingQuestions) : null;
-
-let questions = existingQuestions || generateQuestions();
+let questions = session.get(QUIZ_QUESTIONS, generateQuestions());
 
 questions = questions.map((qn, index) => ({
   number: index + 1,
   ...qn,
 }));
 
-sessionStorage.setItem(QUIZ_QUESTIONS, JSON.stringify(questions));
+session.set(QUIZ_QUESTIONS, questions);
 
-const _questionNumber = sessionStorage.getItem(QUESTION_NUMBER) || 0;
+const _questionNumber = session.get(QUESTION_NUMBER, 0);
 
 function Questions() {
-  const quizTimePerQuestion =
-    sessionStorage.getItem(QUIZ_TIME_PER_QUESTION) || 30;
+  const quizTimePerQuestion = session.get(QUIZ_TIME_PER_QUESTION, 30);
   const maxQuizTime = questions.length * quizTimePerQuestion * 1000;
-  const _timer = sessionStorage.getItem(TIMER) || maxQuizTime;
+  const _timer = session.get(TIMER, maxQuizTime);
 
   const [questionNumber, setQuestionNumber] = useState(_questionNumber);
   const [activeQuestion, setActiveQuestion] = useState(
@@ -48,12 +45,17 @@ function Questions() {
   const [time, setTime] = useState(_timer);
   const history = useHistory();
 
-  let user_answers = sessionStorage.getItem(USER_ANSWERS);
-  user_answers = user_answers ? JSON.parse(user_answers) : [];
+  const quizTime = useMemo(() => {
+    if (time !== 0 && questionNumber < questions.length - 1) {
+      return "";
+    }
+    return time === 0
+      ? formatTime(maxQuizTime)
+      : formatTime(maxQuizTime - time);
+  }, [time, maxQuizTime, questionNumber]);
 
   const submitAnswers = useCallback(() => {
-    let quizTime =
-      time === 0 ? formatTime(maxQuizTime) : formatTime(maxQuizTime - time);
+    let user_answers = session.get(USER_ANSWERS, []);
     let quizScore = 0;
     let reviewQuiz = [];
     user_answers.forEach((ans) => {
@@ -75,18 +77,17 @@ function Questions() {
         });
       }
     });
-    reviewQuiz = JSON.stringify(reviewQuiz);
-    sessionStorage.setItem(USER_QUIZ_REVIEW, reviewQuiz);
-    sessionStorage.setItem(USER_QUIZ_SCORE, quizScore);
-    sessionStorage.setItem(USER_QUIZ_TIME, quizTime);
-    sessionStorage.removeItem(USER_ANSWERS);
-    sessionStorage.removeItem(TIMER);
-    sessionStorage.removeItem(QUIZ_QUESTIONS);
-    sessionStorage.removeItem(QUESTION_NUMBER);
+    session.set(USER_QUIZ_REVIEW, reviewQuiz);
+    session.set(USER_QUIZ_SCORE, quizScore);
+    session.set(USER_QUIZ_TIME, quizTime);
+    session.remove(USER_ANSWERS);
+    session.remove(TIMER);
+    session.remove(QUIZ_QUESTIONS);
+    session.remove(QUESTION_NUMBER);
     logFbEvent(`User quiz score - ${quizScore}`);
     logFbEvent(`User quiz time - ${quizTime}`);
     history.replace(FINISH_PATH);
-  }, [maxQuizTime, time, user_answers, history]);
+  }, [quizTime, history]);
 
   useEffect(() => {
     if (time === 0) {
@@ -95,7 +96,7 @@ function Questions() {
       return;
     }
     const timeout = setTimeout(() => {
-      sessionStorage.setItem(TIMER, time);
+      session.set(TIMER, time);
       setTime((prevState) => prevState - 1000);
     }, 1000);
 
@@ -103,6 +104,7 @@ function Questions() {
   }, [time, submitAnswers]);
 
   useEffect(() => {
+    let user_answers = session.get(USER_ANSWERS, []);
     const foundAnswer = user_answers.find(
       (ans) => ans.id === activeQuestion.id
     );
@@ -111,49 +113,32 @@ function Questions() {
     } else {
       setSelectedAnswer("");
     }
-  }, [user_answers, activeQuestion]);
+  }, [activeQuestion]);
 
   useEffect(() => {
-    sessionStorage.setItem(QUESTION_NUMBER, questionNumber);
+    session.set(QUESTION_NUMBER, questionNumber);
     setActiveQuestion(questions[questionNumber]);
   }, [questionNumber]);
 
-  const handleSelectAnswer = useCallback(
-    (answer, questionID) => {
-      let answer_detail = {
-        id: questionID,
-        answer,
-      };
-      const isAnswerExist = user_answers.find((ans) => ans.id === questionID);
-      if (!isAnswerExist) {
-        user_answers.push(answer_detail);
-      }
-      const updated_user_answer = user_answers.map((ans) => {
-        if (ans.id === questionID) {
-          return answer_detail;
-        }
-        return ans;
-      });
-      sessionStorage.setItem(USER_ANSWERS, JSON.stringify(updated_user_answer));
-      setSelectedAnswer(answer);
-    },
-    [user_answers]
-  );
-
-  const handleKembaliClick = () => {
-    logFbEvent("Kembali button clicked");
-    setQuestionNumber((prevState) => prevState - 1);
-  };
-
-  const handleLanjutClick = () => {
-    if (questionNumber < questions.length - 1) {
-      logFbEvent(`Lanjut button ${questionNumber + 1} clicked`);
-      setQuestionNumber((prevState) => prevState + 1);
-    } else {
-      logFbEvent("Selesai button clicked");
-      submitAnswers();
+  const handleSelectAnswer = useCallback((answer, questionID) => {
+    let user_answers = session.get(USER_ANSWERS, []);
+    let answer_detail = {
+      id: questionID,
+      answer,
+    };
+    const isAnswerExist = user_answers.find((ans) => ans.id === questionID);
+    if (!isAnswerExist) {
+      user_answers.push(answer_detail);
     }
-  };
+    const updated_user_answer = user_answers.map((ans) => {
+      if (ans.id === questionID) {
+        return answer_detail;
+      }
+      return ans;
+    });
+    session.set(USER_ANSWERS, updated_user_answer);
+    setSelectedAnswer(answer);
+  }, []);
 
   return (
     <Container>
@@ -165,21 +150,13 @@ function Questions() {
         selectedAnswer={selectedAnswer}
         onSelectedAnswer={handleSelectAnswer}
       />
-      <Navigation isSticky={selectedAnswer !== ""}>
-        {questionNumber > 0 && (
-          <Button
-            className="kembali-btn"
-            onClick={handleKembaliClick}
-            content="Kembali"
-          />
-        )}
-        <Button
-          primary
-          disabled={selectedAnswer === ""}
-          onClick={handleLanjutClick}
-          content={questionNumber < questions.length - 1 ? "Lanjut" : "Selesai"}
-        />
-      </Navigation>
+      <Navigation
+        questions={questions}
+        selectedAnswer={selectedAnswer}
+        questionNumber={questionNumber}
+        onSetQuestionNumber={setQuestionNumber}
+        onSubmitAnswers={submitAnswers}
+      />
     </Container>
   );
 }
