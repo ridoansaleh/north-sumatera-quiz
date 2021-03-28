@@ -16,6 +16,7 @@ import {
   SocialIconWrapper,
 } from "./_finishStyle";
 import { logFbEvent } from "../../fb_event";
+import session from "../../session_storage";
 import {
   APP_PATHS,
   APP_SESSION_STORAGE,
@@ -34,14 +35,14 @@ const {
 function Finish() {
   const history = useHistory();
 
-  const quizScore = sessionStorage.getItem(USER_QUIZ_SCORE) || " - ";
-  const quizTime = sessionStorage.getItem(USER_QUIZ_TIME) || " - ";
-  const quizLevel = sessionStorage.getItem(USER_QUIZ_LEVEL) || " - ";
+  const quizScore = session.get(USER_QUIZ_SCORE, 0);
+  const quizTime = session.get(USER_QUIZ_TIME, " - ");
+  const quizLevel = session.get(USER_QUIZ_LEVEL, " - ");
 
   const handleCobaLagiClick = () => {
-    sessionStorage.removeItem(TIMER);
-    sessionStorage.removeItem(USER_QUIZ_SCORE);
-    sessionStorage.removeItem(USER_QUIZ_REVIEW);
+    session.remove(TIMER);
+    session.remove(USER_QUIZ_SCORE);
+    session.remove(USER_QUIZ_REVIEW);
     logFbEvent("Coba Lagi button clicked");
     history.replace(QUESTIONS_PATH);
   };
@@ -65,12 +66,14 @@ function Finish() {
         <div>Waktu: {quizTime}</div>
         <div>Level: {quizLevel}</div>
       </UserStats>
-      <Button
-        className="review-btn"
-        color="grey"
-        onClick={handleLihatReviewClick}
-        content="Lihat Review"
-      />
+      {quizScore > 0 && (
+        <Button
+          className="review-btn"
+          color="grey"
+          onClick={handleLihatReviewClick}
+          content="Lihat Review"
+        />
+      )}
       {quizScore < MIN_PASS_QUIZ_SCORE ? (
         <Warning>
           <h4>Kelihatannya nilai kamu tidak cukup bagus</h4>
