@@ -13,6 +13,17 @@ import image_12 from "./images/desa-lingga.jpg";
 import image_13 from "./images/air-terjun-dua-warna-sibolangit.jpg";
 import image_14 from "./images/bukit-lawang-ecotourism-ecoproject.jpg";
 import image_15 from "./images/pantai-hilitasaro-toma.jpg";
+import image_16 from "./images/desa-bakara.jpg";
+import image_17 from "./images/sumur-eluh-berru-tinambunen.jpg";
+import image_18 from "./images/bukit-simarjarunjung.jpg";
+import image_19 from "./images/pantai-pondok-permai.png";
+import image_20 from "./images/masjid-jamik-indrapura.jpg";
+import image_21 from "./images/batu-kapur-paranginan.jpeg";
+import image_22 from "./images/pasar-sibuhuan.png";
+import image_23 from "./images/twa-holiday-resort.jpg";
+import image_24 from "./images/puncak-manalese.jpg";
+import image_25 from "./images/kuburan-keramat-pulau-maose.jpg";
+import image_26 from "./images/desa-bawomataluo.jpg";
 
 const questions = [
   {
@@ -97,7 +108,7 @@ const questions = [
     question: "Apakah nama Ibu Kota Kabupaten Karo?",
     answers: ["Berastagi", "Sibolangit", "Kabanjahe", "Tigabinaga"],
     image: image_12,
-    image_source: "https://silima-merga.blogspot.com/",
+    image_source: "https://silima-merga.blogspot.com",
   },
   {
     id: 13,
@@ -115,34 +126,130 @@ const questions = [
   },
   {
     id: 15,
-    question: "Apakah nama Ibu Kota Nias Selatan?",
+    question: "Apakah nama Ibu Kota Kabupaten Nias Selatan?",
     answers: ["Hiliobolata", "Telukdalam", "Botohili", "Hilibafunua"],
     image: image_15,
-    image_source: "https://portalwisata.co.id/",
+    image_source: "https://portalwisata.co.id",
+  },
+  {
+    id: 16,
+    question: "Apakah nama Ibu Kota Kabupaten Humbang Hasundutan?",
+    answers: ["Pakkat", "Baktiraja", "Dolok Sanggul", "Lintongnihuta"],
+    image: image_16,
+    image_source: "https://venuemagz.com",
+  },
+  {
+    id: 17,
+    question: "Apakah nama Ibu Kota Kabupaten Pakpak Bharat?",
+    answers: ["Pangindar", "Kerajaan", "Siempat Rumbe", "Salak"],
+    image: image_17,
+    image_source: "https://www.andalastourism.com",
+  },
+  {
+    id: 18,
+    question: "Apakah nama Ibu Kota Kabupaten Samosir?",
+    answers: ["Pangururan", "Nainggolan", "Palipi", "Simanindo"],
+    image: image_18,
+    image_source: "https://www.itrip.id",
+  },
+  {
+    id: 19,
+    question: "Apakah nama Ibu Kota Kabupaten Serdang Bedagai?",
+    answers: ["Bandar Khalipah", "Sei Rampah", "Dolok Masihul", "Perbaungan"],
+    image: image_19,
+    image_source: "https://wisato.id",
+  },
+  {
+    id: 20,
+    question: "Apakah nama Ibu Kota Kabupaten Batu Bara?",
+    answers: ["Tanjung Tiram", "Talawi", "Limapuluh", "Kisaran"],
+    image: image_20,
+    image_source: "https://www.itrip.id",
+  },
+  {
+    id: 21,
+    question: "Apakah nama Ibu Kota Kabupaten Padang Lawas Utara?",
+    answers: ["Padang Bolak", "Hulu Sihapas", "Portibi", "Gunung Tua"],
+    image: image_21,
+    image_source: "https://www.andalastourism.com",
+  },
+  {
+    id: 22,
+    question: "Apakah nama Ibu Kota Kabupaten Padang Lawas?",
+    answers: ["Sibuhuan", "Sosa", "Aeknabara", "Sosopan"],
+    image: image_22,
+    image_source: "https://wisataterbaru.net",
+  },
+  {
+    id: 23,
+    question: "Apakah nama Ibu Kota Kabupaten Labuhanbatu Selatan?",
+    answers: ["Torgamba", "Kota Pinang", "Sungai Kanan", "Silangkitang"],
+    image: image_23,
+    image_source: "https://www.andalastourism.com",
+  },
+  {
+    id: 24,
+    question: "Apakah nama Ibu Kota Kabupaten Labuhanbatu Utara?",
+    answers: ["Aek Natas", "Kualuh Hulu", "Aek Kanopan", "Marbau"],
+    image: image_24,
+    image_source: "https://www.andalastourism.com",
+  },
+  {
+    id: 25,
+    question: "Apakah nama Ibu Kota Kabupaten Nias Utara?",
+    answers: ["Afulu", "Alasa", "Lahewa", "Lotu"],
+    image: image_25,
+    image_source: "https://www.andalastourism.com",
+  },
+  {
+    id: 26,
+    question: "Apakah nama Ibu Kota Kabupaten Nias Barat?",
+    answers: ["Lahomi", "Mandrehe", "Sirombu", "Moro'o"],
+    image: image_26,
+    image_source: "https://www.andalastourism.com",
   },
 ];
 
-const questionOption1 = [1, 3, 14, 5, 7, 2, 9, 11, 13, 15];
-const questionOption2 = [3, 1, 10, 5, 15, 9, 4, 2, 13, 7];
-const questionOption3 = [2, 4, 5, 1, 14, 11, 6, 9, 8, 12];
-const questionOption4 = [15, 13, 5, 7, 9, 11, 3, 10, 8, 4];
-const questionOption5 = [8, 11, 15, 7, 9, 3, 13, 6, 10, 12];
+const questionOption1 = [1, 3, 14, 22, 24, 26, 17, 11, 13, 15];
+const questionOption2 = [17, 1, 21, 23, 25, 18, 4, 2, 13, 7];
+const questionOption3 = [2, 4, 5, 24, 26, 19, 21, 9, 8, 12];
+const questionOption4 = [15, 13, 5, 7, 9, 16, 25, 23, 21, 4];
+const questionOption5 = [25, 23, 21, 19, 9, 3, 13, 6, 10, 12];
+const questionOption6 = [16, 18, 20, 5, 7, 2, 9, 19, 21, 23];
+const questionOption7 = [3, 19, 10, 5, 15, 9, 20, 22, 24, 26];
+const questionOption8 = [18, 20, 22, 1, 14, 11, 6, 23, 25, 17];
+const questionOption9 = [26, 24, 22, 20, 18, 11, 3, 10, 8, 19];
+const questionOption10 = [8, 11, 15, 7, 17, 24, 22, 20, 18, 16];
+
+const mapQuestions = (questionOption) => {
+  return questionOption.map((id) => questions.find((qn) => qn.id === id));
+};
 
 export const generateQuestions = () => {
-  const index = Math.floor(Math.random() * 5) + 1;
+  const index = Math.floor(Math.random() * 10) + 1;
   switch (index) {
     case 1:
-      return questionOption1.map((id) => questions.find((qn) => qn.id === id));
+      return mapQuestions(questionOption1);
     case 2:
-      return questionOption2.map((id) => questions.find((qn) => qn.id === id));
+      return mapQuestions(questionOption2);
     case 3:
-      return questionOption3.map((id) => questions.find((qn) => qn.id === id));
+      return mapQuestions(questionOption3);
     case 4:
-      return questionOption4.map((id) => questions.find((qn) => qn.id === id));
+      return mapQuestions(questionOption4);
     case 5:
-      return questionOption5.map((id) => questions.find((qn) => qn.id === id));
+      return mapQuestions(questionOption5);
+    case 6:
+      return mapQuestions(questionOption6);
+    case 7:
+      return mapQuestions(questionOption7);
+    case 8:
+      return mapQuestions(questionOption8);
+    case 9:
+      return mapQuestions(questionOption9);
+    case 10:
+      return mapQuestions(questionOption10);
     default:
-      return questionOption1.map((id) => questions.find((qn) => qn.id === id));
+      return mapQuestions(questionOption1);
   }
 };
 
@@ -206,5 +313,49 @@ export const answers = [
   {
     id: 15,
     answer: "Telukdalam",
+  },
+  {
+    id: 16,
+    answer: "Dolok Sanggul",
+  },
+  {
+    id: 17,
+    answer: "Salak",
+  },
+  {
+    id: 18,
+    answer: "Pangururan",
+  },
+  {
+    id: 19,
+    answer: "Sei Rampah",
+  },
+  {
+    id: 20,
+    answer: "Limapuluh",
+  },
+  {
+    id: 21,
+    answer: "Gunung Tua",
+  },
+  {
+    id: 22,
+    answer: "Sibuhuan",
+  },
+  {
+    id: 23,
+    answer: "Kota Pinang",
+  },
+  {
+    id: 24,
+    answer: "Aek Kanopan",
+  },
+  {
+    id: 25,
+    answer: "Lotu",
+  },
+  {
+    id: 26,
+    answer: "Lahomi",
   },
 ];
