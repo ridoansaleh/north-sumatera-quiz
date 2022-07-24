@@ -1,8 +1,9 @@
 {
   "name": "north-sumatera-quiz",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.4.0",
+  "author": "ridoansaleh",
   "dependencies": {
+    "@supabase/supabase-js": "^1.35.4",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -14,6 +15,7 @@
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.3",
     "styled-components": "^5.2.1",
+    "swr": "^1.3.0",
     "web-vitals": "^1.0.1",
     "workbox-core": "^6.1.2",
     "workbox-expiration": "^6.1.2",

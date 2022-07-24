@@ -1,6 +1,6 @@
 import { Suspense, lazy } from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
-import Loading from "../components/Loading/index.jsx";
+import Loading from "../components/loading/index.jsx";
 import { APP_PATHS } from "../constant";
 const Home = lazy(() => import("./home/index.jsx"));
 const Questions = lazy(() => import("./questions/index.jsx"));

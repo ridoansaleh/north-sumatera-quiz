@@ -18,3 +18,4 @@ export const APP_SESSION_STORAGE = {
 };
 
 export const MIN_PASS_QUIZ_SCORE = 70;
+export const NUMBER_OF_QUIZ_QUESTIONS = 10
