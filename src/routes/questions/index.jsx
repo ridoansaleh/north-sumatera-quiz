@@ -1,13 +1,19 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useHistory } from "react-router-dom";
+import useSWR from "swr";
+import Loading from "../../components/loading/index.jsx";
 import Question from "./sections/Question.jsx";
 import Navigation from "./sections/Navigation.jsx";
 import { Container, Time } from "./styles/_questionsStyle";
 import { logFbEvent } from "../../fb_event";
 import session from "../../session_storage";
-import { formatTime } from "./utils";
-import { answers, generateQuestions } from "./data";
-import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
+import { generateQuestions, formatTime } from "./utils";
+import {
+  APP_PATHS,
+  APP_SESSION_STORAGE,
+  NUMBER_OF_QUIZ_QUESTIONS,
+} from "../../constant";
+import { supabase } from "../../supabaseClient";
 
 const { FINISH_PATH } = APP_PATHS;
 const {
@@ -21,32 +27,47 @@ const {
   TIMER,
 } = APP_SESSION_STORAGE;
 
-let questions = session.get(QUIZ_QUESTIONS, generateQuestions());
+const getData = async (table) => {
+  try {
+    let res = await supabase.from(table).select("*");
+    if (res.error) throw res.error;
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
-questions = questions.map((qn, index) => ({
-  number: index + 1,
-  ...qn,
-}));
-
-session.set(QUIZ_QUESTIONS, questions);
-
-const _questionNumber = session.get(QUESTION_NUMBER, 0);
+const initialQuestionNumber = session.get(QUESTION_NUMBER, 0);
 
 function Questions() {
-  const quizTimePerQuestion = session.get(QUIZ_TIME_PER_QUESTION, 30);
-  const maxQuizTime = questions.length * quizTimePerQuestion * 1000;
-  const _timer = session.get(TIMER, maxQuizTime);
-
-  const [questionNumber, setQuestionNumber] = useState(_questionNumber);
-  const [activeQuestion, setActiveQuestion] = useState(
-    questions[_questionNumber]
-  );
+  const { data: questions } = useSWR("questions", getData);
+  const [selectedQuestions, setSelectedQuestions] = useState([]);
+  const [questionNumber, setQuestionNumber] = useState(initialQuestionNumber);
+  const [activeQuestion, setActiveQuestion] = useState();
   const [selectedAnswer, setSelectedAnswer] = useState("");
-  const [time, setTime] = useState(_timer);
+  const [maxQuizTime, setMaxQuizTime] = useState();
+  const [time, setTime] = useState();
   const history = useHistory();
 
+  useEffect(() => {
+    if (questions?.length) {
+      const updatedQuestions = session.get(
+        QUIZ_QUESTIONS,
+        generateQuestions(questions)
+      );
+      session.set(QUIZ_QUESTIONS, updatedQuestions);
+      const quizTimePerQuestion = session.get(QUIZ_TIME_PER_QUESTION, 30);
+      const _maxQuizTime = updatedQuestions.length * quizTimePerQuestion * 1000;
+      const _timer = session.get(TIMER, _maxQuizTime);
+      setMaxQuizTime(_maxQuizTime);
+      setTime(_timer);
+      setActiveQuestion(updatedQuestions[initialQuestionNumber]);
+      setSelectedQuestions(updatedQuestions);
+    }
+  }, [questions]);
+
   const quizTime = useMemo(() => {
-    if (time !== 0 && questionNumber < questions.length - 1) {
+    if (time !== 0 && questionNumber < NUMBER_OF_QUIZ_QUESTIONS - 1) {
       return "";
     }
     return time === 0
@@ -55,28 +76,21 @@ function Questions() {
   }, [time, maxQuizTime, questionNumber]);
 
   const submitAnswers = useCallback(() => {
-    let user_answers = session.get(USER_ANSWERS, []);
+    let userAnswers = session.get(USER_ANSWERS, []);
     let quizScore = 0;
     let reviewQuiz = [];
-    user_answers.forEach((ans) => {
-      const correctAnswer = answers.find(
-        (correctAns) => correctAns.id === ans.id
-      );
-      if (ans.answer === correctAnswer.answer) {
-        quizScore = quizScore + (1 / questions.length) * 100;
-        reviewQuiz.push({
-          question: questions.find((qs) => qs.id === ans.id).question,
-          answer: ans.answer,
-          status: true,
-        });
-      } else {
-        reviewQuiz.push({
-          question: questions.find((qs) => qs.id === ans.id).question,
-          answer: ans.answer,
-          status: false,
-        });
+
+    userAnswers.forEach((ans) => {
+      if (ans.status) {
+        quizScore = quizScore + (1 / selectedQuestions.length) * 100;
       }
+      reviewQuiz.push({
+        question: selectedQuestions.find((qs) => qs.id === ans.id).question,
+        answer: ans.answer,
+        status: ans.status,
+      });
     });
+
     session.set(USER_QUIZ_REVIEW, reviewQuiz);
     session.set(USER_QUIZ_SCORE, quizScore);
     session.set(USER_QUIZ_TIME, quizTime);
@@ -87,9 +101,10 @@ function Questions() {
     logFbEvent(`User quiz score - ${quizScore}`);
     logFbEvent(`User quiz time - ${quizTime}`);
     history.replace(FINISH_PATH);
-  }, [quizTime, history]);
+  }, [quizTime, selectedQuestions, history]);
 
   useEffect(() => {
+    if (time === undefined) return;
     if (time === 0) {
       logFbEvent("Habis waktu Redirect");
       submitAnswers();
@@ -104,54 +119,74 @@ function Questions() {
   }, [time, submitAnswers]);
 
   useEffect(() => {
-    let user_answers = session.get(USER_ANSWERS, []);
-    const foundAnswer = user_answers.find(
-      (ans) => ans.id === activeQuestion.id
+    let userAnswers = session.get(USER_ANSWERS, []);
+    const foundAnswer = userAnswers.find(
+      (ans) => ans.id === activeQuestion?.id
     );
-    if (foundAnswer) {
-      setSelectedAnswer(foundAnswer.answer);
-    } else {
-      setSelectedAnswer("");
-    }
+    setSelectedAnswer(foundAnswer?.answer || "");
   }, [activeQuestion]);
 
   useEffect(() => {
     session.set(QUESTION_NUMBER, questionNumber);
-    setActiveQuestion(questions[questionNumber]);
-  }, [questionNumber]);
+    setActiveQuestion(selectedQuestions[questionNumber]);
+  }, [selectedQuestions, questionNumber]);
 
-  const handleSelectAnswer = useCallback((answer, questionID) => {
-    let user_answers = session.get(USER_ANSWERS, []);
-    let answer_detail = {
-      id: questionID,
-      answer,
-    };
-    const isAnswerExist = user_answers.find((ans) => ans.id === questionID);
-    if (!isAnswerExist) {
-      user_answers.push(answer_detail);
+  const checkAnswer = async ({ questionId, answer }) => {
+    try {
+      const { data, error } = await supabase
+        .from("answers")
+        .select("answer")
+        .eq("question_id", questionId)
+        .single();
+      if (error) throw error;
+      return data.answer === answer;
+    } catch (error) {
+      throw error;
     }
-    const updated_user_answer = user_answers.map((ans) => {
-      if (ans.id === questionID) {
-        return answer_detail;
-      }
-      return ans;
+  };
+
+  const updateUserAnswers = async ({ answer, questionId }) => {
+    const isAnswerCorrect = await checkAnswer({ questionId, answer });
+    let userAnswers = session.get(USER_ANSWERS, []);
+    const answerDetail = {
+      id: questionId,
+      answer,
+      status: isAnswerCorrect,
+    };
+    const isAnswerExist = userAnswers.find(
+      (answer) => answer.id === questionId
+    );
+    if (!isAnswerExist) {
+      userAnswers.push(answerDetail);
+    }
+    const updatedUserAnswers = userAnswers.map((answer) => {
+      if (answer.id === questionId) return answerDetail;
+      return answer;
     });
-    session.set(USER_ANSWERS, updated_user_answer);
+    session.set(USER_ANSWERS, updatedUserAnswers);
+  };
+
+  const handleSelectAnswer = (answer, questionId) => {
     setSelectedAnswer(answer);
-  }, []);
+    updateUserAnswers({ answer, questionId });
+  };
+
+  if (selectedQuestions.length === 0) return <Loading />;
 
   return (
     <Container>
       <Time>
         Sisa waktu: <span>{formatTime(time)}</span>
       </Time>
-      <Question
-        questionDetail={activeQuestion}
-        selectedAnswer={selectedAnswer}
-        onSelectedAnswer={handleSelectAnswer}
-      />
+      {activeQuestion ? (
+        <Question
+          questionDetail={activeQuestion}
+          selectedAnswer={selectedAnswer}
+          onSelectedAnswer={handleSelectAnswer}
+        />
+      ) : null}
       <Navigation
-        questions={questions}
+        questions={selectedQuestions}
         selectedAnswer={selectedAnswer}
         questionNumber={questionNumber}
         onSetQuestionNumber={setQuestionNumber}
