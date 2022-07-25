@@ -2,8 +2,8 @@ import { useState, Fragment } from "react";
 import { useHistory } from "react-router-dom";
 import { Accordion, Icon, Button } from "semantic-ui-react";
 import { Container } from "./_reviewStyle";
-import { logFbEvent } from "../../fb_event";
-import session from "../../session_storage";
+import { logFbEvent } from "../../fbEvent";
+import session from "../../sessionStorage";
 import { APP_SESSION_STORAGE } from "../../constant";
 
 const { USER_QUIZ_REVIEW } = APP_SESSION_STORAGE;

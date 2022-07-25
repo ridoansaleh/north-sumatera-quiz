@@ -2,8 +2,8 @@ import { useState, useEffect, lazy } from "react";
 import { Image, Button } from "semantic-ui-react";
 import { Container, Version } from "./_homeStyle";
 import questionsIllustration from "./undraw_Questions_re_1fy7.svg";
-import { logFbEvent } from "../../fb_event";
-import session from "../../session_storage";
+import { logFbEvent } from "../../fbEvent";
+import session from "../../sessionStorage";
 const QuizLevelModal = lazy(() => import("./QuizLevelModal.jsx"));
 
 function Home() {
@@ -28,7 +28,7 @@ function Home() {
       <Button primary fluid onClick={handleStartClick}>
         Ayo Mulai!
       </Button>
-      <Version>Kuis Sumut - versi 1.4.0</Version>
+      <Version>Kuis Sumut - versi 1.5.0</Version>
       <QuizLevelModal
         displayModal={displayModal}
         setDisplayModal={setDisplayModal}

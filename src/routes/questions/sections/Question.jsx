@@ -17,34 +17,15 @@ function Question({ questionDetail, selectedAnswer, onSelectedAnswer }) {
         <div>{question}</div>
       </QuestionWrapper>
       <Answers>
-        <div>
+        {answers.map((answer, idx) => (
           <Option
-            isSelected={selectedAnswer === answers[0]}
-            onClick={() => onSelectedAnswer(answers[0], id)}
+            key={idx}
+            isSelected={selectedAnswer === answer}
+            onClick={() => onSelectedAnswer(answer, id)}
           >
-            a. {answers[0]}
+            {answer}
           </Option>
-          <Option
-            isSelected={selectedAnswer === answers[1]}
-            onClick={() => onSelectedAnswer(answers[1], id)}
-          >
-            b. {answers[1]}
-          </Option>
-        </div>
-        <div>
-          <Option
-            isSelected={selectedAnswer === answers[2]}
-            onClick={() => onSelectedAnswer(answers[2], id)}
-          >
-            c. {answers[2]}
-          </Option>
-          <Option
-            isSelected={selectedAnswer === answers[3]}
-            onClick={() => onSelectedAnswer(answers[3], id)}
-          >
-            d. {answers[3]}
-          </Option>
-        </div>
+        ))}
       </Answers>
     </Container>
   );
