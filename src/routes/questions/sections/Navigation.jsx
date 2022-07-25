@@ -1,10 +1,10 @@
 import { memo, useMemo } from "react";
 import { Button } from "semantic-ui-react";
 import { Navigation as Container } from "../styles/_questionsStyle";
-import { logFbEvent } from "../../../fb_event";
+import { logFbEvent } from "../../../fbEvent";
 
 function Navigation({
-  questions,
+  totalQuestion,
   selectedAnswer,
   questionNumber,
   onSetQuestionNumber,
@@ -16,7 +16,7 @@ function Navigation({
   };
 
   const handleLanjutClick = () => {
-    if (questionNumber < questions.length - 1) {
+    if (questionNumber < totalQuestion - 1) {
       logFbEvent(`Lanjut button ${questionNumber + 1} clicked`);
       onSetQuestionNumber((prevState) => prevState + 1);
     } else {
@@ -26,8 +26,8 @@ function Navigation({
   };
 
   const nextButtonLabel = useMemo(
-    () => (questionNumber < questions.length - 1 ? "Lanjut" : "Selesai"),
-    [questionNumber, questions]
+    () => (questionNumber < totalQuestion - 1 ? "Lanjut" : "Selesai"),
+    [questionNumber, totalQuestion]
   );
 
   return (

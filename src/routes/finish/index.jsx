@@ -15,8 +15,8 @@ import {
   ShareContainer,
   SocialIconWrapper,
 } from "./_finishStyle";
-import { logFbEvent } from "../../fb_event";
-import session from "../../session_storage";
+import { logFbEvent } from "../../fbEvent";
+import session from "../../sessionStorage";
 import {
   APP_PATHS,
   APP_SESSION_STORAGE,

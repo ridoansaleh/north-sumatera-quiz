@@ -31,39 +31,25 @@ export const QuestionWrapper = styled.div`
 `;
 
 export const Answers = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  > div {
-    display: flex;
-    flex-direction: column;
-  }
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr;
 
   @media only screen and (min-width: 768px) {
-    flex-direction: row;
-
-    > div {
-      width: 50%;
-      flex-direction: column;
-    }
+    grid-template-columns: 1fr 1fr;
   }
 `;
 
 export const Option = styled.div`
   width: 100%;
-  padding: 2px;
-  margin-bottom: 5px;
+  padding: 4px;
   cursor: pointer;
   color: ${({ isSelected }) => (isSelected ? "#fff" : "#000000DE")};
-  background-color: ${({ isSelected }) => (isSelected ? "#6DF588" : "#fff")};
+  background-color: ${({ isSelected }) => (isSelected ? "#06283D" : "#fff")};
+  border: 1px solid #BCBCBC;
 
   &:hover {
-    background-color: #6df588;
+    background-color: #06283D;
     color: #fff;
-  }
-
-  @media only screen and (min-width: 768px) {
-    width: 50%;
-    margin-bottom: 0;
   }
 `;

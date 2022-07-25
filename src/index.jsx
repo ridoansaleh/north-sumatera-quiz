@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "semantic-ui-css/semantic.min.css";
 import "./index.css";
 import App from "./routes/index.jsx";
-import { initFbSDK } from "./fb_event";
+import { initFbSDK } from "./fbEvent";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
 

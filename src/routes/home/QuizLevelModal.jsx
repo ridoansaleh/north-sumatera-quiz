@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Modal, Form, Radio } from "semantic-ui-react";
-import { logFbEvent } from "../../fb_event";
-import session from "../../session_storage";
+import { logFbEvent } from "../../fbEvent";
+import session from "../../sessionStorage";
 import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
 
 const quizLevels = [

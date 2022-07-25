@@ -1,12 +1,11 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import useSWR from "swr";
-import Loading from "../../components/loading/index.jsx";
 import Question from "./sections/Question.jsx";
 import Navigation from "./sections/Navigation.jsx";
 import { Container, Time } from "./styles/_questionsStyle";
-import { logFbEvent } from "../../fb_event";
-import session from "../../session_storage";
+import { logFbEvent } from "../../fbEvent";
+import session from "../../sessionStorage";
 import { generateQuestions, formatTime } from "./utils";
 import {
   APP_PATHS,
@@ -40,10 +39,20 @@ const getData = async (table) => {
 const initialQuestionNumber = session.get(QUESTION_NUMBER, 0);
 
 function Questions() {
-  const { data: questions } = useSWR("questions", getData);
+  const { data: questions, error: errorQuestions } = useSWR(
+    "questions",
+    getData,
+    { fallbackData: [] }
+  );
   const [selectedQuestions, setSelectedQuestions] = useState([]);
   const [questionNumber, setQuestionNumber] = useState(initialQuestionNumber);
-  const [activeQuestion, setActiveQuestion] = useState();
+  const [activeQuestion, setActiveQuestion] = useState({
+    id: "",
+    number: "",
+    image_source: "",
+    question: "",
+    answers: [],
+  });
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [maxQuizTime, setMaxQuizTime] = useState();
   const [time, setTime] = useState();
@@ -56,12 +65,12 @@ function Questions() {
         generateQuestions(questions)
       );
       session.set(QUIZ_QUESTIONS, updatedQuestions);
-      const quizTimePerQuestion = session.get(QUIZ_TIME_PER_QUESTION, 30);
-      const _maxQuizTime = updatedQuestions.length * quizTimePerQuestion * 1000;
+      const _quizTimePerQuestion = session.get(QUIZ_TIME_PER_QUESTION, 30);
+      const _maxQuizTime =
+        updatedQuestions.length * _quizTimePerQuestion * 1000;
       const _timer = session.get(TIMER, _maxQuizTime);
       setMaxQuizTime(_maxQuizTime);
       setTime(_timer);
-      setActiveQuestion(updatedQuestions[initialQuestionNumber]);
       setSelectedQuestions(updatedQuestions);
     }
   }, [questions]);
@@ -128,7 +137,9 @@ function Questions() {
 
   useEffect(() => {
     session.set(QUESTION_NUMBER, questionNumber);
-    setActiveQuestion(selectedQuestions[questionNumber]);
+    if (selectedQuestions.length > 0) {
+      setActiveQuestion(selectedQuestions[questionNumber]);
+    }
   }, [selectedQuestions, questionNumber]);
 
   const checkAnswer = async ({ questionId, answer }) => {
@@ -139,7 +150,7 @@ function Questions() {
         .eq("question_id", questionId)
         .single();
       if (error) throw error;
-      return data.answer === answer;
+      return data.answer === String(answer);
     } catch (error) {
       throw error;
     }
@@ -171,22 +182,27 @@ function Questions() {
     updateUserAnswers({ answer, questionId });
   };
 
-  if (selectedQuestions.length === 0) return <Loading />;
+  if (errorQuestions) {
+    return (
+      <div className="center">
+        <h1>Something went wrong.</h1>
+        <h4>Please try again later!</h4>
+      </div>
+    );
+  }
 
   return (
     <Container>
       <Time>
         Sisa waktu: <span>{formatTime(time)}</span>
       </Time>
-      {activeQuestion ? (
-        <Question
-          questionDetail={activeQuestion}
-          selectedAnswer={selectedAnswer}
-          onSelectedAnswer={handleSelectAnswer}
-        />
-      ) : null}
+      <Question
+        questionDetail={activeQuestion}
+        selectedAnswer={selectedAnswer}
+        onSelectedAnswer={handleSelectAnswer}
+      />
       <Navigation
-        questions={selectedQuestions}
+        totalQuestion={selectedQuestions.length}
         selectedAnswer={selectedAnswer}
         questionNumber={questionNumber}
         onSetQuestionNumber={setQuestionNumber}
