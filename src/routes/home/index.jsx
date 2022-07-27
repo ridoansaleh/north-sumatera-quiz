@@ -28,7 +28,7 @@ function Home() {
       <Button primary fluid onClick={handleStartClick}>
         Ayo Mulai!
       </Button>
-      <Version>Kuis Sumut - versi 1.5.0</Version>
+      <Version>Kuis Sumut - versi 1.6.0</Version>
       <QuizLevelModal
         displayModal={displayModal}
         setDisplayModal={setDisplayModal}

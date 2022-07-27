@@ -8,6 +8,8 @@ import {
   WhatsappShareButton,
   WhatsappIcon,
 } from "react-share";
+import { useWindowSize } from 'react-use';
+import Confetti from "react-confetti";
 import {
   Container,
   Warning,
@@ -34,6 +36,7 @@ const {
 
 function Finish() {
   const history = useHistory();
+  const { width, height } = useWindowSize();
 
   const quizScore = session.get(USER_QUIZ_SCORE, 0);
   const quizTime = session.get(USER_QUIZ_TIME, " - ");
@@ -54,11 +57,17 @@ function Finish() {
 
   return (
     <Container>
-      <h1>{quizScore >= MIN_PASS_QUIZ_SCORE ? "Horee!" : "Waduuh"}</h1>
       {quizScore >= MIN_PASS_QUIZ_SCORE ? (
-        <Icon name="check circle" size="massive" color="green" />
+        <>
+          <Confetti width={width} height={height} />
+          <h1>Horee</h1>
+          <Icon name="check circle" size="massive" color="green" />
+        </>
       ) : (
-        <Icon name="x" size="massive" color="red" />
+        <>
+          <h1>Waduuh</h1>
+          <Icon name="x" size="massive" color="red" />
+        </>
       )}
       <h3>Kamu telah menyelesaikan Kuis Seputar Sumatera Utara</h3>
       <UserStats>

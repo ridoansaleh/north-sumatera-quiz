@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import useSWR from "swr";
+import Loading from '../../components/loading'
 import Question from "./sections/Question.jsx";
 import Navigation from "./sections/Navigation.jsx";
 import { Container, Time } from "./styles/_questionsStyle";
@@ -190,6 +191,8 @@ function Questions() {
       </div>
     );
   }
+
+  if (questions.length === 0) return <Loading />
 
   return (
     <Container>
