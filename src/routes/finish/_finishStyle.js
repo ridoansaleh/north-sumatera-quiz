@@ -26,6 +26,7 @@ export const UserStats = styled.div`
 `;
 
 export const Warning = styled.div`
+  width: 100%;
   margin-top: 40px;
   background-color: #fc806f;
   padding: 15px 25px;
@@ -33,6 +34,7 @@ export const Warning = styled.div`
 
   @media only screen and (min-width: 768px) {
     padding: 15px 75px;
+    width: 768px;
   }
 `;
 

@@ -16,6 +16,13 @@ const quizLevels = [
 const { QUESTIONS_PATH } = APP_PATHS;
 const { QUIZ_TIME_PER_QUESTION, USER_QUIZ_LEVEL } = APP_SESSION_STORAGE;
 
+const radioStyle = {
+  border: '1px solid rgba(34,36,38,.15)',
+  borderRadius: '4px',
+  padding: '10px 12px',
+  width: '100%',
+}
+
 function QuizLevelModal({ displayModal, setDisplayModal }) {
   const [quizLevel, setQuizLevel] = useState("");
   const history = useHistory();
@@ -66,6 +73,7 @@ function QuizLevelModal({ displayModal, setDisplayModal }) {
           {quizLevels.map((level) => (
             <Form.Field key={level.key}>
               <Radio
+                style={radioStyle}
                 label={level.text}
                 name="quizLevel"
                 value={level.value}

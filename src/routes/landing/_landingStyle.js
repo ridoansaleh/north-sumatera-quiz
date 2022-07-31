@@ -49,6 +49,14 @@ export const Container = styled.div`
   }
 `;
 
+export const Image = styled.img`
+  max-height: 400px;
+
+  @media only screen and (min-width: 768px) {
+    max-height: 600px;
+  }
+`;
+
 export const Version = styled.div`
   position: absolute;
   bottom: 24px;
