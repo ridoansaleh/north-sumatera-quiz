@@ -1,12 +1,12 @@
 import { useState, useEffect, lazy } from "react";
-import { Image, Button } from "semantic-ui-react";
-import { Container, Version } from "./_homeStyle";
-import questionsIllustration from "./undraw_Questions_re_1fy7.svg";
+import { Button } from "semantic-ui-react";
+import { Container, Image, Version } from "./_landingStyle";
+import questionsIllustration from "./undraw_quiz_re_aol4.svg";
 import { logFbEvent } from "../../fbEvent";
 import session from "../../sessionStorage";
 const QuizLevelModal = lazy(() => import("./QuizLevelModal.jsx"));
 
-function Home() {
+function Landing() {
   const [displayModal, setDisplayModal] = useState(false);
 
   useEffect(() => {
@@ -21,14 +21,14 @@ function Home() {
   return (
     <Container>
       <h2>
-        Tes Pengetahuanmu Mengenai <span>Sumatera Utara</span> dengan Menjawab
+        Tes Pengetahuanmu Tentang <span>Sumatera Utara</span> dengan Menjawab
         Kuis ini
       </h2>
       <Image src={questionsIllustration} />
       <Button primary fluid onClick={handleStartClick}>
         Ayo Mulai!
       </Button>
-      <Version>Kuis Sumut - versi 1.6.0</Version>
+      <Version>Kuis Sumut - versi 2.0</Version>
       <QuizLevelModal
         displayModal={displayModal}
         setDisplayModal={setDisplayModal}
@@ -37,4 +37,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Landing;

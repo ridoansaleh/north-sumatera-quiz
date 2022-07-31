@@ -1,5 +1,5 @@
 export const APP_PATHS = {
-  HOME_PATH: "/",
+  LANDING_PATH: "/",
   QUESTIONS_PATH: "/questions",
   FINISH_PATH: "/finish",
   REVIEW_PATH: "/review",

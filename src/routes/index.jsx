@@ -1,21 +1,21 @@
 import { Suspense, lazy } from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
-import Loading from "../components/loading/index.jsx";
+import Loading from "../components/loading";
 import { APP_PATHS } from "../constant";
-const Home = lazy(() => import("./home/index.jsx"));
-const Questions = lazy(() => import("./questions/index.jsx"));
-const Finish = lazy(() => import("./finish/index.jsx"));
-const Review = lazy(() => import("./review/index.jsx"));
+const Landing = lazy(() => import("./landing"));
+const Questions = lazy(() => import("./questions"));
+const Finish = lazy(() => import("./finish"));
+const Review = lazy(() => import("./review"));
 
-const { HOME_PATH, QUESTIONS_PATH, FINISH_PATH, REVIEW_PATH } = APP_PATHS;
+const { LANDING_PATH, QUESTIONS_PATH, FINISH_PATH, REVIEW_PATH } = APP_PATHS;
 
 function App() {
   return (
     <Router>
       <Suspense fallback={<Loading />}>
         <Switch>
-          <Route path={HOME_PATH} exact>
-            <Home />
+          <Route path={LANDING_PATH} exact>
+            <Landing />
           </Route>
           <Route path={QUESTIONS_PATH}>
             <Questions />
