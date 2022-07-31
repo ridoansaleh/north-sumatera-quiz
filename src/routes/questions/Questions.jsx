@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import useSWR from "swr";
-import Loading from '../../components/loading'
+import Loading from "../../components/loading";
 import Question from "./sections/Question.jsx";
 import Navigation from "./sections/Navigation.jsx";
 import { Container, Time } from "./styles/_questionsStyle";
@@ -13,7 +13,7 @@ import {
   APP_SESSION_STORAGE,
   NUMBER_OF_QUIZ_QUESTIONS,
 } from "../../constant";
-import { supabase } from "../../supabaseClient";
+import { checkAnswer, getData } from "../../services";
 
 const { FINISH_PATH } = APP_PATHS;
 const {
@@ -26,16 +26,6 @@ const {
   QUESTION_NUMBER,
   TIMER,
 } = APP_SESSION_STORAGE;
-
-const getData = async (table) => {
-  try {
-    let res = await supabase.from(table).select("*");
-    if (res.error) throw res.error;
-    return res.data;
-  } catch (error) {
-    throw error;
-  }
-};
 
 const initialQuestionNumber = session.get(QUESTION_NUMBER, 0);
 
@@ -143,45 +133,35 @@ function Questions() {
     }
   }, [selectedQuestions, questionNumber]);
 
-  const checkAnswer = async ({ questionId, answer }) => {
-    try {
-      const { data, error } = await supabase
-        .from("answers")
-        .select("answer")
-        .eq("question_id", questionId)
-        .single();
-      if (error) throw error;
-      return data.answer === String(answer);
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const updateUserAnswers = async ({ answer, questionId }) => {
-    const isAnswerCorrect = await checkAnswer({ questionId, answer });
-    let userAnswers = session.get(USER_ANSWERS, []);
-    const answerDetail = {
-      id: questionId,
-      answer,
-      status: isAnswerCorrect,
+  useEffect(() => {
+    const updateUserAnswers = async ({ answer, questionId }) => {
+      const isAnswerCorrect = await checkAnswer({ questionId, answer });
+      let userAnswers = session.get(USER_ANSWERS, []);
+      const answerDetail = {
+        id: questionId,
+        answer,
+        status: isAnswerCorrect,
+      };
+      const isAnswerExist = userAnswers.find(
+        (answer) => answer.id === questionId
+      );
+      if (!isAnswerExist) {
+        userAnswers.push(answerDetail);
+      }
+      const updatedUserAnswers = userAnswers.map((answer) => {
+        if (answer.id === questionId) return answerDetail;
+        return answer;
+      });
+      session.set(USER_ANSWERS, updatedUserAnswers);
     };
-    const isAnswerExist = userAnswers.find(
-      (answer) => answer.id === questionId
-    );
-    if (!isAnswerExist) {
-      userAnswers.push(answerDetail);
-    }
-    const updatedUserAnswers = userAnswers.map((answer) => {
-      if (answer.id === questionId) return answerDetail;
-      return answer;
-    });
-    session.set(USER_ANSWERS, updatedUserAnswers);
-  };
 
-  const handleSelectAnswer = (answer, questionId) => {
-    setSelectedAnswer(answer);
-    updateUserAnswers({ answer, questionId });
-  };
+    if (activeQuestion.id && selectedAnswer) {
+      updateUserAnswers({
+        answer: selectedAnswer,
+        questionId: activeQuestion.id,
+      });
+    }
+  }, [activeQuestion, selectedAnswer]);
 
   if (errorQuestions) {
     return (
@@ -192,7 +172,7 @@ function Questions() {
     );
   }
 
-  if (questions.length === 0) return <Loading />
+  if (questions.length === 0) return <Loading />;
 
   return (
     <Container>
@@ -202,7 +182,7 @@ function Questions() {
       <Question
         questionDetail={activeQuestion}
         selectedAnswer={selectedAnswer}
-        onSelectedAnswer={handleSelectAnswer}
+        onSelectedAnswer={setSelectedAnswer}
       />
       <Navigation
         totalQuestion={selectedQuestions.length}
