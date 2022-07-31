@@ -28,7 +28,7 @@ function Landing() {
       <Button primary fluid onClick={handleStartClick}>
         Ayo Mulai!
       </Button>
-      <Version>Kuis Sumut - versi 2.0</Version>
+      <Version>Kuis Sumut - versi 2.1</Version>
       <QuizLevelModal
         displayModal={displayModal}
         setDisplayModal={setDisplayModal}

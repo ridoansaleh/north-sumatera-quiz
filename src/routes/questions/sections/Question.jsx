@@ -8,7 +8,7 @@ import {
 } from "../styles/_questionStyle";
 
 function Question({ questionDetail, selectedAnswer, onSelectedAnswer }) {
-  const { id, number, image, image_source, question, answers } = questionDetail;
+  const { number, image, image_source, question, answers } = questionDetail;
   return (
     <Container>
       <Image src={image} alt={`Sumber gambar ${image_source}`} />
@@ -21,7 +21,7 @@ function Question({ questionDetail, selectedAnswer, onSelectedAnswer }) {
           <Option
             key={idx}
             isSelected={selectedAnswer === answer}
-            onClick={() => onSelectedAnswer(answer, id)}
+            onClick={() => onSelectedAnswer(answer)}
           >
             {answer}
           </Option>
