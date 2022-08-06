@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-export const Container = styled.div`
+export const Container = styled.main`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -17,7 +17,7 @@ export const Container = styled.div`
   }
 `;
 
-export const Time = styled.div`
+export const Time = styled.section`
   border: 2.5px solid #fc806f;
   padding: 10px;
   margin-bottom: 24px;
@@ -33,7 +33,7 @@ export const Time = styled.div`
   }
 `;
 
-export const Navigation = styled.div`
+export const Navigation = styled.section`
   display: flex;
   flex-direction: column-reverse;
   margin-top: 24px;

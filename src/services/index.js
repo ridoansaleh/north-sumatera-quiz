@@ -16,9 +16,9 @@ export const checkAnswer = async ({ questionId, answer }) => {
 
 export const getData = async (table) => {
   try {
-    let res = await supabase.from(table).select();
-    if (res.error) throw res.error;
-    return res.data;
+    let { data, error } = await supabase.from(table).select();
+    if (error) throw error;
+    return data;
   } catch (error) {
     throw error;
   }

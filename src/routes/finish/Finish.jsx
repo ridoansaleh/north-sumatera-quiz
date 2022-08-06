@@ -17,7 +17,6 @@ import {
   ShareContainer,
   SocialIconWrapper,
 } from "./_finishStyle";
-import { logFbEvent } from "../../fbEvent";
 import session from "../../sessionStorage";
 import {
   APP_PATHS,
@@ -42,16 +41,14 @@ function Finish() {
   const quizTime = session.get(USER_QUIZ_TIME, " - ");
   const quizLevel = session.get(USER_QUIZ_LEVEL, " - ");
 
-  const handleCobaLagiClick = () => {
+  const handleReTryClick = () => {
     session.remove(TIMER);
     session.remove(USER_QUIZ_SCORE);
     session.remove(USER_QUIZ_REVIEW);
-    logFbEvent("Coba Lagi button clicked");
     history.replace(QUESTIONS_PATH);
   };
 
-  const handleLihatReviewClick = () => {
-    logFbEvent("Lihat review button clicked");
+  const handleSeeReviewClick = () => {
     history.push(REVIEW_PATH);
   };
 
@@ -79,14 +76,14 @@ function Finish() {
         <Button
           className="review-btn"
           color="grey"
-          onClick={handleLihatReviewClick}
+          onClick={handleSeeReviewClick}
           content="Lihat Review"
         />
       )}
       {quizScore < MIN_PASS_QUIZ_SCORE ? (
         <Warning>
           <h4>Kelihatannya nilai kamu tidak cukup bagus</h4>
-          <Button primary onClick={handleCobaLagiClick} content="Coba Lagi" />
+          <Button primary onClick={handleReTryClick} content="Coba Lagi" />
         </Warning>
       ) : (
         <ShareContainer>

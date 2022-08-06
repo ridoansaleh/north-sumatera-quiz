@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+export const Container = styled.section`
   margin-bottom: 20px;
 
   img {
@@ -21,32 +21,34 @@ export const Container = styled.div`
   }
 `;
 
-export const QuestionWrapper = styled.div`
+export const QuestionWrapper = styled.p`
   display: flex;
   margin: 15px 0;
 
-  div:nth-child(1) {
+  span:nth-child(1) {
     margin-right: 10px;
   }
 `;
 
-export const Answers = styled.div`
+export const Answers = styled.ul`
   display: grid;
   gap: 10px;
   grid-template-columns: 1fr;
+  padding: 0;
 
   @media only screen and (min-width: 768px) {
     grid-template-columns: 1fr 1fr;
   }
 `;
 
-export const Option = styled.div`
+export const Option = styled.li`
   width: 100%;
   padding: 4px;
   cursor: pointer;
   color: ${({ isSelected }) => (isSelected ? "#fff" : "#000000DE")};
   background-color: ${({ isSelected }) => (isSelected ? "#06283D" : "#fff")};
   border: 1px solid #BCBCBC;
+  list-style: none;
 
   &:hover {
     background-color: #06283D;

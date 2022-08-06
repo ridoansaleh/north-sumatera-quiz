@@ -1,6 +1,6 @@
 {
   "name": "north-sumatera-quiz",
-  "version": "2.1",
+  "version": "3.0",
   "author": "ridoansaleh",
   "dependencies": {
     "@supabase/supabase-js": "^1.35.4",

@@ -2,10 +2,10 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import useSWR from "swr";
 import Loading from "../../components/loading";
+import Error from "../../components/error-boundary/Error";
 import Question from "./sections/Question.jsx";
 import Navigation from "./sections/Navigation.jsx";
 import { Container, Time } from "./styles/_questionsStyle";
-import { logFbEvent } from "../../fbEvent";
 import session from "../../sessionStorage";
 import { generateQuestions, formatTime } from "./utils";
 import {
@@ -98,15 +98,12 @@ function Questions() {
     session.remove(TIMER);
     session.remove(QUIZ_QUESTIONS);
     session.remove(QUESTION_NUMBER);
-    logFbEvent(`User quiz score - ${quizScore}`);
-    logFbEvent(`User quiz time - ${quizTime}`);
     history.replace(FINISH_PATH);
   }, [quizTime, selectedQuestions, history]);
 
   useEffect(() => {
     if (time === undefined) return;
     if (time === 0) {
-      logFbEvent("Habis waktu Redirect");
       submitAnswers();
       return;
     }
@@ -164,12 +161,7 @@ function Questions() {
   }, [activeQuestion, selectedAnswer]);
 
   if (errorQuestions) {
-    return (
-      <div className="center">
-        <h1>Something went wrong.</h1>
-        <h4>Please try again later!</h4>
-      </div>
-    );
+    return <Error />;
   }
 
   if (questions.length === 0) return <Loading />;
