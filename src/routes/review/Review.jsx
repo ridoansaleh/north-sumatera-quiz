@@ -2,7 +2,6 @@ import { useState, Fragment } from "react";
 import { useHistory } from "react-router-dom";
 import { Accordion, Icon, Button } from "semantic-ui-react";
 import { Container } from "./_reviewStyle";
-import { logFbEvent } from "../../fbEvent";
 import session from "../../sessionStorage";
 import { APP_SESSION_STORAGE } from "../../constant";
 
@@ -15,12 +14,10 @@ function Review() {
   let userQuizReview = session.get(USER_QUIZ_REVIEW, []);
 
   const handleToggleAnswer = (index) => {
-    logFbEvent(`Answer of question number ${index + 1} was toggled`);
     setActiveIndex(index);
   };
 
   const handleBackClick = () => {
-    logFbEvent("Review back button clicked");
     history.goBack();
   };
 

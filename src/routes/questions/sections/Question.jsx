@@ -13,8 +13,8 @@ function Question({ questionDetail, selectedAnswer, onSelectedAnswer }) {
     <Container>
       <Image src={image} alt={`Sumber gambar ${image_source}`} />
       <QuestionWrapper>
-        <div>{number})</div>
-        <div>{question}</div>
+        <span>{`${number})`}</span>
+        <span>{question}</span>
       </QuestionWrapper>
       <Answers>
         {answers.map((answer, idx) => (

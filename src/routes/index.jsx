@@ -1,6 +1,7 @@
 import { Suspense, lazy } from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import Loading from "../components/loading";
+import ErrorBoundary from "../components/error-boundary/ErrorBoundary";
 import { APP_PATHS } from "../constant";
 const Landing = lazy(() => import("./landing"));
 const Questions = lazy(() => import("./questions"));
@@ -18,7 +19,9 @@ function App() {
             <Landing />
           </Route>
           <Route path={QUESTIONS_PATH}>
-            <Questions />
+            <ErrorBoundary>
+              <Questions />
+            </ErrorBoundary>
           </Route>
           <Route path={FINISH_PATH}>
             <Finish />

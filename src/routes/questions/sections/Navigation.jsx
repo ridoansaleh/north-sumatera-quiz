@@ -1,7 +1,6 @@
 import { memo, useMemo } from "react";
 import { Button } from "semantic-ui-react";
 import { Navigation as Container } from "../styles/_questionsStyle";
-import { logFbEvent } from "../../../fbEvent";
 
 function Navigation({
   totalQuestion,
@@ -10,17 +9,14 @@ function Navigation({
   onSetQuestionNumber,
   onSubmitAnswers,
 }) {
-  const handleKembaliClick = () => {
-    logFbEvent("Kembali button clicked");
+  const handleBackClick = () => {
     onSetQuestionNumber((prevState) => prevState - 1);
   };
 
-  const handleLanjutClick = () => {
+  const handleNextClick = () => {
     if (questionNumber < totalQuestion - 1) {
-      logFbEvent(`Lanjut button ${questionNumber + 1} clicked`);
       onSetQuestionNumber((prevState) => prevState + 1);
     } else {
-      logFbEvent("Selesai button clicked");
       onSubmitAnswers();
     }
   };
@@ -35,14 +31,14 @@ function Navigation({
       {questionNumber > 0 && (
         <Button
           className="kembali-btn"
-          onClick={handleKembaliClick}
+          onClick={handleBackClick}
           content="Kembali"
         />
       )}
       <Button
         primary
         disabled={selectedAnswer === ""}
-        onClick={handleLanjutClick}
+        onClick={handleNextClick}
         content={nextButtonLabel}
       />
     </Container>

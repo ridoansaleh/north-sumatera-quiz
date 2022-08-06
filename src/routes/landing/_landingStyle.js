@@ -16,7 +16,7 @@ const glowingAnimation = keyframes`
   }
 `;
 
-export const Container = styled.div`
+export const Container = styled.main`
   position: relative;
   display: flex;
   flex-direction: column;

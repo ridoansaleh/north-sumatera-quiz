@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Modal, Form, Radio } from "semantic-ui-react";
-import { logFbEvent } from "../../fbEvent";
 import session from "../../sessionStorage";
 import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
 
@@ -49,13 +48,11 @@ function QuizLevelModal({ displayModal, setDisplayModal }) {
     session.set(USER_QUIZ_LEVEL, value);
     setQuizLevel(value);
     setTimeout(() => {
-      logFbEvent(`Kuis level - ${value}`);
       history.replace(QUESTIONS_PATH);
     }, 500);
   };
 
-  const handleBatalClick = () => {
-    logFbEvent("Batal button clicked");
+  const handleCancelClick = () => {
     setDisplayModal(false);
   };
 
@@ -85,7 +82,7 @@ function QuizLevelModal({ displayModal, setDisplayModal }) {
         </Form>
       </Modal.Content>
       <Modal.Actions>
-        <Button negative onClick={handleBatalClick}>
+        <Button negative onClick={handleCancelClick}>
           Batal
         </Button>
       </Modal.Actions>
