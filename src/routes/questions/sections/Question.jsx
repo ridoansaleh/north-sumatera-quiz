@@ -5,7 +5,7 @@ import {
   QuestionWrapper,
   Answers,
   Option,
-} from "../styles/_questionStyle";
+} from "./_questionStyle";
 
 function Question({ questionDetail, selectedAnswer, onSelectedAnswer }) {
   const { number, image, image_source, question, answers } = questionDetail;

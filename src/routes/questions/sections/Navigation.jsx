@@ -1,6 +1,6 @@
 import { memo, useMemo } from "react";
 import { Button } from "semantic-ui-react";
-import { Navigation as Container } from "../styles/_questionsStyle";
+import { Container } from "./_navigationStyle";
 
 function Navigation({
   totalQuestion,

@@ -1,19 +1,15 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useHistory } from "react-router-dom";
-import useSWR from "swr";
 import Loading from "../../components/loading";
 import Error from "../../components/error-boundary/Error";
 import Question from "./sections/Question.jsx";
 import Navigation from "./sections/Navigation.jsx";
-import { Container, Time } from "./styles/_questionsStyle";
+import { Container, Time } from "./_questionsStyle";
 import session from "../../sessionStorage";
-import { generateQuestions, formatTime } from "./utils";
-import {
-  APP_PATHS,
-  APP_SESSION_STORAGE,
-  NUMBER_OF_QUIZ_QUESTIONS,
-} from "../../constant";
-import { checkAnswer, getData } from "../../services";
+import { formatTime } from "./utils";
+import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
+import { checkAnswer } from "../../services";
+import useQuestions from "./useQuestions";
 
 const { FINISH_PATH } = APP_PATHS;
 const {
@@ -30,12 +26,7 @@ const {
 const initialQuestionNumber = session.get(QUESTION_NUMBER, 0);
 
 function Questions() {
-  const { data: questions, error: errorQuestions } = useSWR(
-    "questions",
-    getData,
-    { fallbackData: [] }
-  );
-  const [selectedQuestions, setSelectedQuestions] = useState([]);
+  const { questions, errorQuestions } = useQuestions();
   const [questionNumber, setQuestionNumber] = useState(initialQuestionNumber);
   const [activeQuestion, setActiveQuestion] = useState({
     id: "",
@@ -51,46 +42,30 @@ function Questions() {
 
   useEffect(() => {
     if (questions?.length) {
-      const updatedQuestions = session.get(
-        QUIZ_QUESTIONS,
-        generateQuestions(questions)
-      );
-      session.set(QUIZ_QUESTIONS, updatedQuestions);
+      session.set(QUIZ_QUESTIONS, questions);
       const _quizTimePerQuestion = session.get(QUIZ_TIME_PER_QUESTION, 30);
-      const _maxQuizTime =
-        updatedQuestions.length * _quizTimePerQuestion * 1000;
+      const _maxQuizTime = questions.length * _quizTimePerQuestion * 1000;
       const _timer = session.get(TIMER, _maxQuizTime);
       setMaxQuizTime(_maxQuizTime);
       setTime(_timer);
-      setSelectedQuestions(updatedQuestions);
     }
   }, [questions]);
 
-  const quizTime = useMemo(() => {
-    if (time !== 0 && questionNumber < NUMBER_OF_QUIZ_QUESTIONS - 1) {
-      return "";
-    }
-    return time === 0
-      ? formatTime(maxQuizTime)
-      : formatTime(maxQuizTime - time);
-  }, [time, maxQuizTime, questionNumber]);
-
   const submitAnswers = useCallback(() => {
     let userAnswers = session.get(USER_ANSWERS, []);
-    let quizScore = 0;
-    let reviewQuiz = [];
 
-    userAnswers.forEach((ans) => {
-      if (ans.status) {
-        quizScore = quizScore + (1 / selectedQuestions.length) * 100;
-      }
-      reviewQuiz.push({
-        question: selectedQuestions.find((qs) => qs.id === ans.id).question,
-        answer: ans.answer,
-        status: ans.status,
-      });
-    });
+    const reviewQuiz = userAnswers.map((ans) => ({
+      question: questions.find((qs) => qs.id === ans.id).question,
+      answer: ans.answer,
+      status: ans.status,
+    }));
 
+    const quizScore = userAnswers.reduce((acc, item) => {
+      const score = item.status ? (1 / questions.length) * 100 : 0;
+      return acc + score;
+    }, 0);
+
+    const quizTime = formatTime(maxQuizTime - time);
     session.set(USER_QUIZ_REVIEW, reviewQuiz);
     session.set(USER_QUIZ_SCORE, quizScore);
     session.set(USER_QUIZ_TIME, quizTime);
@@ -99,7 +74,7 @@ function Questions() {
     session.remove(QUIZ_QUESTIONS);
     session.remove(QUESTION_NUMBER);
     history.replace(FINISH_PATH);
-  }, [quizTime, selectedQuestions, history]);
+  }, [questions, maxQuizTime, time, history]);
 
   useEffect(() => {
     if (time === undefined) return;
@@ -125,10 +100,10 @@ function Questions() {
 
   useEffect(() => {
     session.set(QUESTION_NUMBER, questionNumber);
-    if (selectedQuestions.length > 0) {
-      setActiveQuestion(selectedQuestions[questionNumber]);
+    if (questions.length > 0) {
+      setActiveQuestion(questions[questionNumber]);
     }
-  }, [selectedQuestions, questionNumber]);
+  }, [questions, questionNumber]);
 
   useEffect(() => {
     const updateUserAnswers = async ({ answer, questionId }) => {
@@ -177,7 +152,7 @@ function Questions() {
         onSelectedAnswer={setSelectedAnswer}
       />
       <Navigation
-        totalQuestion={selectedQuestions.length}
+        totalQuestion={questions.length}
         selectedAnswer={selectedAnswer}
         questionNumber={questionNumber}
         onSetQuestionNumber={setQuestionNumber}

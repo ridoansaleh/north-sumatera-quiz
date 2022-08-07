@@ -3,13 +3,27 @@ import { Button } from "semantic-ui-react";
 import { Container, Image, Version } from "./_landingStyle";
 import questionsIllustration from "./undraw_quiz_re_aol4.svg";
 import session from "../../sessionStorage";
+import { APP_SESSION_STORAGE } from "../../constant";
+import { getUserLocation, saveUsersVisit } from "../../services";
 const QuizLevelModal = lazy(() => import("./QuizLevelModal.jsx"));
+
+const { USER_HAS_VISITED } = APP_SESSION_STORAGE;
 
 function Landing() {
   const [displayModal, setDisplayModal] = useState(false);
 
   useEffect(() => {
-    session.clear();
+    const hasUserVisit = session.get(USER_HAS_VISITED);
+    if (!hasUserVisit) {
+      session.set(USER_HAS_VISITED, true);
+      getUserLocation().then((res) => {
+        saveUsersVisit({
+          created_at: Date(),
+          city: res.city,
+          country: res.country,
+        });
+      });
+    }
   }, []);
 
   const handleStartClick = () => {
@@ -26,7 +40,7 @@ function Landing() {
       <Button primary fluid onClick={handleStartClick}>
         Ayo Mulai!
       </Button>
-      <Version>Kuis Sumut - versi 3.0</Version>
+      <Version>Kuis Sumut - versi 3.5</Version>
       <QuizLevelModal
         displayModal={displayModal}
         setDisplayModal={setDisplayModal}

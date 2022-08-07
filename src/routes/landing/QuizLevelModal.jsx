@@ -27,6 +27,7 @@ function QuizLevelModal({ displayModal, setDisplayModal }) {
   const history = useHistory();
 
   const handleLevelChange = (_, { value }) => {
+    session.clear()
     switch (value) {
       case "Mudah":
         session.set(QUIZ_TIME_PER_QUESTION, 30);
