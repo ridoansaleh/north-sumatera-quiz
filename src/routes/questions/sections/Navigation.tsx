@@ -16,7 +16,7 @@ function Navigation({
   questionNumber,
   onSetQuestionNumber,
   onSubmitAnswers,
-}: NavigationProps): JSX.Element {
+}: NavigationProps) {
   const handleBackClick = () => {
     onSetQuestionNumber((prevState) => prevState - 1);
   };
