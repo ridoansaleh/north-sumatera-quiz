@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+interface OptionProps {
+  isSelected: boolean
+}
+
 export const Container = styled.section`
   margin-bottom: 20px;
 
@@ -24,6 +28,8 @@ export const Container = styled.section`
 export const QuestionWrapper = styled.p`
   display: flex;
   margin: 15px 0;
+  font-weight: bold;
+  font-size: 18px;
 
   span:nth-child(1) {
     margin-right: 10px;
@@ -41,14 +47,15 @@ export const Answers = styled.ul`
   }
 `;
 
-export const Option = styled.li`
+export const Option = styled.li<OptionProps>`
   width: 100%;
-  padding: 4px;
+  padding: 8px;
   cursor: pointer;
   color: ${({ isSelected }) => (isSelected ? "#fff" : "#000000DE")};
   background-color: ${({ isSelected }) => (isSelected ? "#06283D" : "#fff")};
   border: 1px solid #BCBCBC;
   list-style: none;
+  font-size: 16px;
 
   &:hover {
     background-color: #06283D;

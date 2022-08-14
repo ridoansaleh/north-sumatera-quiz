@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Button, Modal, Form, Radio } from "semantic-ui-react";
 import session from "../../sessionStorage";
 import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
+import { QuizLevelForm } from './_quizLeveModalStyle'
 
 const quizLevels = [
   { key: "m", text: "Mudah - 30 detik / soal", value: "Mudah" },
@@ -16,18 +17,26 @@ const { QUESTIONS_PATH } = APP_PATHS;
 const { QUIZ_TIME_PER_QUESTION, USER_QUIZ_LEVEL } = APP_SESSION_STORAGE;
 
 const radioStyle = {
-  border: '1px solid rgba(34,36,38,.15)',
-  borderRadius: '4px',
-  padding: '10px 12px',
-  width: '100%',
-}
+  border: "1px solid rgba(34,36,38,.15)",
+  borderRadius: "4px",
+  padding: "10px 12px",
+  width: "100%",
+};
 
-function QuizLevelModal({ displayModal, setDisplayModal }) {
+type QuizLevelModalProps = {
+  displayModal: boolean;
+  setDisplayModal: (value: boolean) => void;
+};
+
+function QuizLevelModal({
+  displayModal,
+  setDisplayModal,
+}: QuizLevelModalProps) {
   const [quizLevel, setQuizLevel] = useState("");
   const history = useHistory();
 
-  const handleLevelChange = (_, { value }) => {
-    session.clear()
+  const handleLevelChange = (_: any, { value }: { value: string }) => {
+    session.clear();
     switch (value) {
       case "Mudah":
         session.set(QUIZ_TIME_PER_QUESTION, 30);
@@ -66,7 +75,7 @@ function QuizLevelModal({ displayModal, setDisplayModal }) {
     >
       <Modal.Header>Pilih Level Kuis!</Modal.Header>
       <Modal.Content>
-        <Form>
+        <QuizLevelForm>
           <Form.Field>Level kuis berfungsi menentukan durasi kuis</Form.Field>
           {quizLevels.map((level) => (
             <Form.Field key={level.key}>
@@ -80,7 +89,7 @@ function QuizLevelModal({ displayModal, setDisplayModal }) {
               />
             </Form.Field>
           ))}
-        </Form>
+        </QuizLevelForm>
       </Modal.Content>
       <Modal.Actions>
         <Button negative onClick={handleCancelClick}>

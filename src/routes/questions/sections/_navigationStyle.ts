@@ -1,6 +1,10 @@
 import styled, { css } from "styled-components";
 
-export const Container = styled.section`
+interface ContainerProps {
+  isSticky: boolean
+}
+
+export const Container = styled.section<ContainerProps>`
   display: flex;
   flex-direction: column-reverse;
   margin-top: 24px;

@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "semantic-ui-css/semantic.min.css";
 import "./index.css";
-import App from "./routes/index.jsx";
+import App from "./routes/index";
 import { initFbSDK } from "./fbSdk";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
