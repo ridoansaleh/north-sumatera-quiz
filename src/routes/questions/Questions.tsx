@@ -2,14 +2,15 @@ import { useState, useEffect, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import Loading from "../../components/loading";
 import Error from "../../components/error-boundary/Error";
-import Question from "./sections/Question.jsx";
-import Navigation from "./sections/Navigation.jsx";
+import Question from "./sections/Question";
+import Navigation from "./sections/Navigation";
 import { Container, Time } from "./_questionsStyle";
 import session from "../../sessionStorage";
 import { formatTime } from "./utils";
-import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
+import { APP_PATHS, APP_SESSION_STORAGE, NUMBER_OF_QUIZ_QUESTIONS } from "../../constant";
 import { checkAnswer } from "../../services";
 import useQuestions from "./useQuestions";
+import { IAnswer, IQuestionUI } from "../../types";
 
 const { FINISH_PATH } = APP_PATHS;
 const {
@@ -24,38 +25,36 @@ const {
 } = APP_SESSION_STORAGE;
 
 const initialQuestionNumber = session.get(QUESTION_NUMBER, 0);
+const _quizTimePerQuestion = session.get(QUIZ_TIME_PER_QUESTION, 30);
+const maxQuizTime = NUMBER_OF_QUIZ_QUESTIONS * _quizTimePerQuestion * 1000;
+const _timer = session.get(TIMER, maxQuizTime);
 
 function Questions() {
   const { questions, errorQuestions } = useQuestions();
   const [questionNumber, setQuestionNumber] = useState(initialQuestionNumber);
-  const [activeQuestion, setActiveQuestion] = useState({
-    id: "",
-    number: "",
+  const [activeQuestion, setActiveQuestion] = useState<IQuestionUI>({
+    id: 0,
+    number: 0,
+    image: "",
     image_source: "",
     question: "",
     answers: [],
   });
   const [selectedAnswer, setSelectedAnswer] = useState("");
-  const [maxQuizTime, setMaxQuizTime] = useState();
-  const [time, setTime] = useState();
+  const [time, setTime] = useState<number>(_timer);
   const history = useHistory();
 
   useEffect(() => {
     if (questions?.length) {
       session.set(QUIZ_QUESTIONS, questions);
-      const _quizTimePerQuestion = session.get(QUIZ_TIME_PER_QUESTION, 30);
-      const _maxQuizTime = questions.length * _quizTimePerQuestion * 1000;
-      const _timer = session.get(TIMER, _maxQuizTime);
-      setMaxQuizTime(_maxQuizTime);
-      setTime(_timer);
     }
   }, [questions]);
 
   const submitAnswers = useCallback(() => {
-    let userAnswers = session.get(USER_ANSWERS, []);
+    let userAnswers: IAnswer[] = session.get(USER_ANSWERS, []);
 
     const reviewQuiz = userAnswers.map((ans) => ({
-      question: questions.find((qs) => qs.id === ans.id).question,
+      question: questions.find((qs) => qs.id === ans.id)?.question || "",
       answer: ans.answer,
       status: ans.status,
     }));
@@ -74,7 +73,7 @@ function Questions() {
     session.remove(QUIZ_QUESTIONS);
     session.remove(QUESTION_NUMBER);
     history.replace(FINISH_PATH);
-  }, [questions, maxQuizTime, time, history]);
+  }, [questions, time, history]);
 
   useEffect(() => {
     if (time === undefined) return;
@@ -91,7 +90,7 @@ function Questions() {
   }, [time, submitAnswers]);
 
   useEffect(() => {
-    let userAnswers = session.get(USER_ANSWERS, []);
+    let userAnswers: IAnswer[] = session.get(USER_ANSWERS, []);
     const foundAnswer = userAnswers.find(
       (ans) => ans.id === activeQuestion?.id
     );
@@ -106,9 +105,15 @@ function Questions() {
   }, [questions, questionNumber]);
 
   useEffect(() => {
-    const updateUserAnswers = async ({ answer, questionId }) => {
+    const updateUserAnswers = async ({
+      answer,
+      questionId,
+    }: {
+      answer: string;
+      questionId: number;
+    }) => {
       const isAnswerCorrect = await checkAnswer({ questionId, answer });
-      let userAnswers = session.get(USER_ANSWERS, []);
+      let userAnswers: IAnswer[] = session.get(USER_ANSWERS, []);
       const answerDetail = {
         id: questionId,
         answer,

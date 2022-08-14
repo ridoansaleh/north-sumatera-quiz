@@ -5,7 +5,7 @@ import questionsIllustration from "./undraw_quiz_re_aol4.svg";
 import session from "../../sessionStorage";
 import { APP_SESSION_STORAGE } from "../../constant";
 import { getUserLocation, saveUsersVisit } from "../../services";
-const QuizLevelModal = lazy(() => import("./QuizLevelModal.jsx"));
+const QuizLevelModal = lazy(() => import("./QuizLevelModal"));
 
 const { USER_HAS_VISITED } = APP_SESSION_STORAGE;
 
@@ -40,7 +40,7 @@ function Landing() {
       <Button primary fluid onClick={handleStartClick}>
         Ayo Mulai!
       </Button>
-      <Version>Kuis Sumut - versi 3.5</Version>
+      <Version>Kuis Sumut - versi 4.1</Version>
       <QuizLevelModal
         displayModal={displayModal}
         setDisplayModal={setDisplayModal}

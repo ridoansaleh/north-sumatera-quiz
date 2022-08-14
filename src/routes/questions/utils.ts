@@ -1,6 +1,7 @@
 import { NUMBER_OF_QUIZ_QUESTIONS } from '../../constant'
+import { IQuestionUI, IQuestionTable } from '../../types'
 
-export const formatTime = (time) => {
+export const formatTime = (time: number): string => {
   let timeText = "";
   let seconds = time / 1000;
   if (seconds >= 60) {
@@ -16,7 +17,7 @@ export const formatTime = (time) => {
 };
 
 
-const shuffleQuestionIDs = (totalQuestions) => {
+const shuffleQuestionIDs = (totalQuestions: number): number[] => {
   let arr = [];
   while (arr.length < NUMBER_OF_QUIZ_QUESTIONS) {
     let numb = Math.floor(Math.random() * totalQuestions) + 1;
@@ -25,8 +26,8 @@ const shuffleQuestionIDs = (totalQuestions) => {
   return arr;
 };
 
-export const generateQuestions = (questions) => {
+export const generateQuestions = (questions: IQuestionTable[]): IQuestionUI[] => {
   const questionIds = shuffleQuestionIDs(questions.length)
-  const questionList = questionIds.map((id) => questions.find((qn) => qn.id === id));
+  const questionList = questions.filter((qn) => questionIds.includes(qn.id));
   return questionList.map((question, idx) => ({ number: idx+1, ...question }));
 };

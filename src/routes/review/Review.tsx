@@ -4,6 +4,7 @@ import { Accordion, Icon, Button } from "semantic-ui-react";
 import { Container } from "./_reviewStyle";
 import session from "../../sessionStorage";
 import { APP_SESSION_STORAGE } from "../../constant";
+import { IQuizReview } from '../../types'
 
 const { USER_QUIZ_REVIEW } = APP_SESSION_STORAGE;
 
@@ -11,9 +12,9 @@ function Review() {
   const [activeIndex, setActiveIndex] = useState(0);
   const history = useHistory();
 
-  let userQuizReview = session.get(USER_QUIZ_REVIEW, []);
+  let userQuizReview: IQuizReview[] = session.get(USER_QUIZ_REVIEW, []);
 
-  const handleToggleAnswer = (index) => {
+  const handleToggleAnswer = (index: number): void => {
     setActiveIndex(index);
   };
 

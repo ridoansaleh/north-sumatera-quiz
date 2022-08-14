@@ -2,13 +2,21 @@ import { memo, useMemo } from "react";
 import { Button } from "semantic-ui-react";
 import { Container } from "./_navigationStyle";
 
+type NavigationProps = {
+  totalQuestion: number
+  selectedAnswer: string
+  questionNumber: number
+  onSetQuestionNumber: (value: (prevState: number) => number) => void
+  onSubmitAnswers: () => void
+}
+
 function Navigation({
   totalQuestion,
   selectedAnswer,
   questionNumber,
   onSetQuestionNumber,
   onSubmitAnswers,
-}) {
+}: NavigationProps): JSX.Element {
   const handleBackClick = () => {
     onSetQuestionNumber((prevState) => prevState - 1);
   };
