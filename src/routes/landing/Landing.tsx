@@ -13,7 +13,7 @@ function Landing() {
   const [displayModal, setDisplayModal] = useState(false);
 
   useEffect(() => {
-    const hasUserVisit = session.get(USER_HAS_VISITED);
+    const hasUserVisit: boolean = session.get(USER_HAS_VISITED, false);
     if (!hasUserVisit) {
       session.set(USER_HAS_VISITED, true);
       getUserLocation().then((res) => {

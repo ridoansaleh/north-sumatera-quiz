@@ -17,8 +17,7 @@ const runApp = () => {
 };
 
 initFbSDK()
-  .then((res) => {
-    console.info(res.message);
+  .then(() => {
     runApp();
   })
   .catch(() => {

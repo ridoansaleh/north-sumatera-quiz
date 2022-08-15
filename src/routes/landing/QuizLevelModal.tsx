@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Button, Modal, Form, Radio } from "semantic-ui-react";
 import session from "../../sessionStorage";
 import { APP_PATHS, APP_SESSION_STORAGE } from "../../constant";
-import { QuizLevelForm } from './_quizLeveModalStyle'
+import { QuizLevelForm } from './_quizLevelModalStyle'
 
 const quizLevels = [
   { key: "m", text: "Mudah - 30 detik / soal", value: "Mudah" },
