@@ -1,4 +1,4 @@
-const isObjects = (value) => {
+const isObjects = (value: any) => {
   if (!value) return false;
   if (Array.isArray(value) || typeof value === "object") {
     return true;
@@ -7,11 +7,11 @@ const isObjects = (value) => {
 };
 
 const session = {
-  set: (key, value) => {
+  set: (key: string, value: any) => {
     let _value = isObjects(value) ? JSON.stringify(value) : value;
     sessionStorage.setItem(key, _value);
   },
-  get: (key, fallbackValue) => {
+  get: (key: string, fallbackValue: any) => {
     let sessionValue = sessionStorage.getItem(key) || fallbackValue;
     try {
       return JSON.parse(sessionValue);
@@ -19,7 +19,7 @@ const session = {
       return sessionValue;
     }
   },
-  remove: (key) => sessionStorage.removeItem(key),
+  remove: (key: string) => sessionStorage.removeItem(key),
   clear: () => sessionStorage.clear(),
 };
 

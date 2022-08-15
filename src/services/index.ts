@@ -1,6 +1,12 @@
 import { supabase } from "../supabaseClient";
 
-export const checkAnswer = async ({ questionId, answer }) => {
+export const checkAnswer = async ({
+  questionId,
+  answer,
+}: {
+  questionId: number;
+  answer: string;
+}) => {
   try {
     const { data, error } = await supabase
       .from("answers")
@@ -14,7 +20,7 @@ export const checkAnswer = async ({ questionId, answer }) => {
   }
 };
 
-export const getData = async (table) => {
+export const getData = async (table: string) => {
   try {
     const { data, error } = await supabase.from(table).select();
     if (error) throw error;
@@ -24,28 +30,30 @@ export const getData = async (table) => {
   }
 };
 
-export const saveUsersVisit = async (userData) => {
+export const saveUsersVisit = async (userData: {
+  created_at: string;
+  city: string;
+  country: string;
+}) => {
   try {
     const { data, error } = await supabase
-      .from('users_visit')
-      .insert([
-        { ...userData }
-      ])
-      if (error) throw error;
-      return data;
+      .from("users_visit")
+      .insert([{ ...userData }]);
+    if (error) throw error;
+    return data;
   } catch (error) {
-    throw error
+    throw error;
   }
-}
+};
 
 export const getUserLocation = async () => {
   try {
-    const res = await fetch('http://ip-api.com/json')
+    const res = await fetch("http://ip-api.com/json");
     if (!res.ok) {
-      throw res.statusText
+      throw res.statusText;
     }
-    return res.json()
+    return res.json();
   } catch (error) {
-    throw error
+    throw error;
   }
-}
+};
