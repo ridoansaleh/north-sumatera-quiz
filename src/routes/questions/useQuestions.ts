@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import useSWR from "swr";
-import { getData } from "../../services";
+import { getQuestions } from "../../services";
 import session from "../../sessionStorage";
 import { generateQuestions } from "./utils";
 import { APP_SESSION_STORAGE } from "../../constant";
@@ -14,7 +14,7 @@ type ReturnTypes = {
 }
 
 function useQuestions(): ReturnTypes {
-  const { data, error } = useSWR("questions", getData, { fallbackData: [] });
+  const { data, error } = useSWR("questions", getQuestions, { fallbackData: [] });
   const [questions, setQuestions] = useState([])
 
   useEffect(() => {

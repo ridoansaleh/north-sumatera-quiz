@@ -1,4 +1,4 @@
-import { supabase } from "../supabaseClient";
+import * as prismic from "@prismicio/client";
 
 export const checkAnswer = async ({
   questionId,
@@ -8,51 +8,27 @@ export const checkAnswer = async ({
   answer: string;
 }) => {
   try {
-    const { data, error } = await supabase
-      .from("answers")
-      .select("answer")
-      .eq("question_id", questionId)
-      .single();
-    if (error) throw error;
-    return data.answer === String(answer);
+    const client = await prismic.createClient("ridoan");
+    const response = await client.getAllByType("nsq_answer", {
+      filters: [
+        prismic.filter.at("my.nsq_answer.question_id", JSON.stringify(questionId))
+      ],
+    });
+    return response[0].data.answer === String(answer);
   } catch (error) {
     throw error;
   }
 };
 
-export const getData = async (table: string) => {
+export const getQuestions = async () => {
   try {
-    const { data, error } = await supabase.from(table).select();
-    if (error) throw error;
-    return data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const saveUsersVisit = async (userData: {
-  created_at: string;
-  city: string;
-  country: string;
-}) => {
-  try {
-    const { data, error } = await supabase
-      .from("users_visit")
-      .insert([{ ...userData }]);
-    if (error) throw error;
-    return data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const getUserLocation = async () => {
-  try {
-    const res = await fetch("http://ip-api.com/json");
-    if (!res.ok) {
-      throw res.statusText;
-    }
-    return res.json();
+    const client = await prismic.createClient("ridoan");
+    const response = await client.getSingle("nsq_questions");
+    const parsedData = (response.data?.question_item || []).map((item: any) => ({
+      ...item,
+      answers: JSON.parse(item.answers), // a workaround to fix the un-match data type. Can't save an array in Prismic
+    }))
+    return parsedData;
   } catch (error) {
     throw error;
   }
