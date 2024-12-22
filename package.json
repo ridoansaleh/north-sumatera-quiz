@@ -1,6 +1,6 @@
 {
   "name": "north-sumatera-quiz",
-  "version": "4.3",
+  "version": "4.4",
   "author": "ridoansaleh",
   "dependencies": {
     "@babel/core": "7.12.3",
