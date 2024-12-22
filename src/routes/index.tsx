@@ -1,5 +1,5 @@
 import { Suspense, lazy } from "react";
-import { HashRouter as Router, Switch, Route } from "react-router-dom";
+import { HashRouter, Switch, Route } from "react-router-dom";
 import Loading from "../components/loading";
 import ErrorBoundary from "../components/error-boundary/ErrorBoundary";
 import { APP_PATHS } from "../constant";
@@ -12,7 +12,7 @@ const { LANDING_PATH, QUESTIONS_PATH, FINISH_PATH, REVIEW_PATH } = APP_PATHS;
 
 function App() {
   return (
-    <Router>
+    <HashRouter>
       <Suspense fallback={<Loading />}>
         <Switch>
           <Route path={LANDING_PATH} exact>
@@ -31,7 +31,7 @@ function App() {
           </Route>
         </Switch>
       </Suspense>
-    </Router>
+    </HashRouter>
   );
 }
 
